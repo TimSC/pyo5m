@@ -309,7 +309,7 @@ class O5mDecode(object):
 			if refIndex == 0:
 				typeAndRoleRaw = self.DecodeSingleString(objDataStream)
 				typeAndRole = typeAndRoleRaw.decode("utf-8")
-				self.ConsiderAddBuffToStringRefTable(typeAndRole)
+				self.ConsiderAddBuffToStringRefTable(typeAndRoleRaw)
 			else:
 				typeAndRole = self.stringPairs[-refIndex].decode("utf-8")
 
