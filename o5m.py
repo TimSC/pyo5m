@@ -1,4 +1,4 @@
-import struct, datetime, six
+import struct, datetime, six, calendar, datetime
 
 # ****** o5m utilities ******
 
@@ -168,8 +168,12 @@ class O5mDecode(object):
 	def ConsiderAddToStringRefTable(self, firstStr, secondStr):
 		#Consider if to add pair to string reference table
 		combinedRaw = firstStr+b"\x00"+secondStr+b"\x00"
-		if len(combinedRaw) < self.refTableLengthThreshold:
-			self.stringPairs.append(combinedRaw)
+		self.ConsiderAddBuffToStringRefTable(combinedRaw)
+
+	def ConsiderAddBuffToStringRefTable(self, buff):
+		#Consider if to add to string reference table
+		if len(buff) < self.refTableLengthThreshold:
+			self.stringPairs.append(buff)
 
 			#Make sure it does not grow forever
 			if len(self.stringPairs) > 15000:
@@ -298,10 +302,17 @@ class O5mDecode(object):
 
 		refStart = objDataStream.tell()
 		refs = []
+
 		while objDataStream.tell() < refStart + refLen:
 			deltaRef = DecodeNumber(objDataStream, True)
-			DecodeNumber(objDataStream) #String start byte
-			typeAndRole = self.DecodeSingleString(objDataStream).decode("utf-8")
+			refIndex = DecodeNumber(objDataStream) #Index into reference table
+			if refIndex == 0:
+				typeAndRoleRaw = self.DecodeSingleString(objDataStream)
+				typeAndRole = typeAndRoleRaw.decode("utf-8")
+				self.ConsiderAddBuffToStringRefTable(typeAndRole)
+			else:
+				typeAndRole = self.stringPairs[-refIndex].decode("utf-8")
+
 			typeCode = int(typeAndRole[0])
 			role = typeAndRole[1:]
 			refId = None
@@ -390,13 +401,13 @@ class O5mEncode(object):
 		#Decode author and time stamp
 		outStream.write(EncodeNumber(version))
 		if version != 0:
-			raise RuntimeError("Not implemented")
-			timestamp = utc_mktime(dt.timetuple(datetime))
+			timestamp = calendar.timegm(timestamp.utctimetuple())
 			deltaTime = timestamp - self.lastTimeStamp
 			outStream.write(EncodeNumber(deltaTime, True))
 			self.lastTimeStamp = timestamp
 			#print "timestamp", self.lastTimeStamp, deltaTime
-			if self.lastTimeStamp != 0:
+			if timestamp != 0:
+				#print changeset
 				deltaChangeSet = changeset - self.lastChangeSet
 				outStream.write(EncodeNumber(deltaChangeSet, True))
 				self.lastChangeSet = changeset
@@ -406,7 +417,7 @@ class O5mEncode(object):
 				encUsername = b""
 				if username is not None:
 					encUsername = username.encode("utf-8")
-				WriteStringPair(self, encUid, encUsername, outStream)
+				self.WriteStringPair(encUid, encUsername, outStream)
 
 	def EncodeSingleString(self, strIn):
 		return strIn + b'\x00'
@@ -423,7 +434,9 @@ class O5mEncode(object):
 
 		tmpStream.write(b"\x00")
 		tmpStream.write(encodedStrings)
+		self.ConsiderAddToRefTable(encodedStrings)
 
+	def ConsiderAddToRefTable(self, encodedStrings):
 		if len(encodedStrings) < self.refTableLengthThreshold:
 			self.stringPairs.append(encodedStrings)
 
@@ -441,7 +454,7 @@ class O5mEncode(object):
 		self.lastObjId = objectId
 
 		version, timestamp, changeset, uid, username = metaData
-		self.EncodeMetaData(version, timestamp, uid, changeset, username, tmpStream)
+		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Position
 		lat = round(pos[0] * 1e7)
@@ -472,7 +485,7 @@ class O5mEncode(object):
 
 		#Store meta data
 		version, timestamp, changeset, uid, username = metaData
-		self.EncodeMetaData(version, timestamp, uid, changeset, username, tmpStream)
+		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Store nodes
 		refStream = six.BytesIO()
@@ -505,7 +518,7 @@ class O5mEncode(object):
 
 		#Store meta data
 		version, timestamp, changeset, uid, username = metaData
-		self.EncodeMetaData(version, timestamp, uid, changeset, username, tmpStream)
+		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Store referenced children
 		refStream = six.BytesIO()
@@ -526,9 +539,15 @@ class O5mEncode(object):
 				self.lastRefRelation = refId
 
 			refStream.write(EncodeNumber(deltaRef, True))
-			refStream.write(b'\x00') #String start byte
-			typeAndRole = (str(typeCode) + role).encode("utf-8")
-			refStream.write(self.EncodeSingleString(typeAndRole))
+
+			typeCodeAndRole = (str(typeCode) + role).encode("utf-8")
+			try:
+				refIndex = self.stringPairs.index(typeCodeAndRole)
+				refStream.write(EncodeNumber(len(self.stringPairs) - refIndex))
+			except ValueError:
+				refStream.write(b'\x00') #String start byte
+				refStream.write(self.EncodeSingleString(typeCodeAndRole))
+				self.ConsiderAddToRefTable(typeCodeAndRole)
 
 		encRefs = refStream.getvalue()
 		tmpStream.write(EncodeNumber(len(encRefs)))
