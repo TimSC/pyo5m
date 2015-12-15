@@ -48,9 +48,9 @@ class DecodeHandler(object):
 			self.members.append(int(attrs['ref']))
 		if name == "member":
 			self.members.append((attrs['type'], int(attrs['ref']), attrs['role']))
-		if name == "bounds":
-			if self.parent.funcStoreBounds is not None:
-				bbox = float(attrs['minlon']), float(attrs['minlat']), float(attrs['maxlon']), float(attrs['maxlat'])
+		if name == "bounds" and self.parent.funcStoreBounds is not None:
+				bbox = (float(attrs['minlon']), float(attrs['minlat']), 
+					float(attrs['maxlon']), float(attrs['maxlat']))
 				self.parent.funcStoreBounds(bbox)
 
 	def end_element(self, name):
@@ -59,7 +59,8 @@ class DecodeHandler(object):
 				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
 					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
 					ValOrNone(self.attrs,"username"))
-				self.parent.funcStoreNode(self.attrs["id"], metaData, self.tags, [self.attrs["lat"],self.attrs["lon"]])
+				self.parent.funcStoreNode(self.attrs["id"], metaData, 
+					self.tags, [self.attrs["lat"],self.attrs["lon"]])
 			self.attrs = {}
 			self.tags = {}
 			self.members = []
@@ -117,13 +118,15 @@ class OsmXmlDecode(object):
 class OsmXmlEncode(object):
 	def __init__(self, handle):
 		self.writer = codecs.getwriter("utf-8")(handle)
-
-	def StoreIsDiff(self, isDiff):
 		self.writer.write(u"<?xml version='1.0' encoding='UTF-8'?>\n")
 		self.writer.write(u"<osm version='0.6' upload='false' generator='pyo5m'>\n")
 
+	def StoreIsDiff(self, isDiff):
+		pass
+
 	def StoreBounds(self, bbox):
-		self.writer.write(u"  <bounds minlat='{0}' minlon='{1}' maxlat='{2}' maxlon='{3}' />\n".format(bbox[1], bbox[0], bbox[3], bbox[2]))
+		self.writer.write(u"  <bounds minlat='{0}' minlon='{1}' maxlat='{2}' maxlon='{3}' />\n"
+			.format(bbox[1], bbox[0], bbox[3], bbox[2]))
 
 	def EncodeMetaData(self, metaData, outStream):
 		version, timestamp, changeset, uid, username = metaData
@@ -139,12 +142,14 @@ class OsmXmlEncode(object):
 			outStream.write(u" changeset='{0}'".format(int(changeset)))
 
 	def StoreNode(self, objectId, metaData, tags, pos):
-		self.writer.write(u"  <node id='{0}' lat='{1}' lon='{2}'".format(int(objectId), float(pos[0]), float(pos[1])))
+		self.writer.write(u"  <node id='{0}' lat='{1}' lon='{2}'"
+			.format(int(objectId), float(pos[0]), float(pos[1])))
 		self.EncodeMetaData(metaData, self.writer)
 		if len(tags) > 0:
 			self.writer.write(u">\n")
 			for k in tags:
-				self.writer.write(u"    <tag k={0} v={1} />\n".format(sax.quoteattr(k), sax.quoteattr(tags[k])))
+				self.writer.write(u"    <tag k={0} v={1} />\n"
+					.format(sax.quoteattr(k), sax.quoteattr(tags[k])))
 			self.writer.write("  </node>\n")
 		else:
 			self.writer.write(u" />\n")
@@ -156,7 +161,8 @@ class OsmXmlEncode(object):
 		for ref in refs:
 			self.writer.write(u"    <nd ref='{0}' />\n".format(int(ref)))
 		for k in tags:
-			self.writer.write(u"    <tag k={0} v={1} />\n".format(sax.quoteattr(k), sax.quoteattr(tags[k])))
+			self.writer.write(u"    <tag k={0} v={1} />\n"
+				.format(sax.quoteattr(k), sax.quoteattr(tags[k])))
 		self.writer.write(u"  </way>\n")
 
 	def StoreRelation(self, objectId, metaData, tags, refs):
@@ -164,9 +170,11 @@ class OsmXmlEncode(object):
 		self.EncodeMetaData(metaData, self.writer)
 		self.writer.write(u">\n")
 		for typeStr, refId, role in refs:
-			self.writer.write(u"    <member type={0} ref='{1}' role={2} />\n".format(sax.quoteattr(typeStr), int(refId), sax.quoteattr(role)))
+			self.writer.write(u"    <member type={0} ref='{1}' role={2} />\n".format(
+				sax.quoteattr(typeStr), int(refId), sax.quoteattr(role)))
 		for k in tags:
-			self.writer.write(u"    <tag k={0} v={1} />\n".format(sax.quoteattr(k), sax.quoteattr(tags[k])))
+			self.writer.write(u"    <tag k={0} v={1} />\n"
+				.format(sax.quoteattr(k), sax.quoteattr(tags[k])))
 		self.writer.write(u"  </relation>\n")
 
 	def Finish(self):
