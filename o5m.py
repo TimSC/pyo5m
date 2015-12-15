@@ -94,6 +94,7 @@ class O5mDecode(object):
 		self.funcStoreBounds = None
 		self.funcStoreIsDiff = None
 		self.refTableLengthThreshold = 250
+		self.refTableMaxSize = 15000
 
 	def ResetDeltaCoding(self):
 		self.lastObjId = 0 #Used in delta encoding
@@ -175,8 +176,8 @@ class O5mDecode(object):
 		self.stringPairs.append(buff)
 
 		#Make sure it does not grow forever
-		if len(self.stringPairs) > 15000:
-			self.stringPairs = self.stringPairs[-15000:]
+		if len(self.stringPairs) > self.refTableMaxSize:
+			self.stringPairs = self.stringPairs[-self.refTableMaxSize:]
 
 	def ReadStringPair(self, stream):
 		ref = DecodeNumber(stream)
@@ -360,6 +361,7 @@ class O5mEncode(object):
 		self.funcStoreBounds = None
 		self.funcStoreIsDiff = None
 		self.refTableLengthThreshold = 250
+		self.refTableMaxSize = 15000
 
 	def ResetDeltaCoding(self):
 		self.lastObjId = 0 #Used in delta encoding
@@ -443,8 +445,8 @@ class O5mEncode(object):
 		self.stringPairs.append(encodedStrings)
 
 		#Limit size of reference table
-		if len(self.stringPairs) > 15000:
-			self.stringPairs = self.stringPairs[-15000:]
+		if len(self.stringPairs) > self.refTableMaxSize:
+			self.stringPairs = self.stringPairs[-self.refTableMaxSize:]
 
 	def StoreNode(self, objectId, metaData, tags, pos):
 		self.handle.write(b"\x10")
