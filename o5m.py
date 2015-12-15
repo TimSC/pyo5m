@@ -94,6 +94,7 @@ class O5mDecode(object):
 		self.funcStoreBounds = None
 		self.funcStoreIsDiff = None
 		self.refTableLengthThreshold = 253
+		self.singleStringRefTableThreshold = 251
 
 	def ResetDeltaCoding(self):
 		self.lastObjId = 0 #Used in delta encoding
@@ -168,16 +169,15 @@ class O5mDecode(object):
 	def ConsiderAddToStringRefTable(self, firstStr, secondStr):
 		#Consider if to add pair to string reference table
 		combinedRaw = firstStr+b"\x00"+secondStr+b"\x00"
-		self.ConsiderAddBuffToStringRefTable(combinedRaw)
+		if len(combinedRaw) < self.refTableLengthThreshold:
+			self.AddBuffToStringRefTable(combinedRaw)
 
-	def ConsiderAddBuffToStringRefTable(self, buff):
-		#Consider if to add to string reference table
-		if len(buff) < self.refTableLengthThreshold:
-			self.stringPairs.append(buff)
+	def AddBuffToStringRefTable(self, buff):
+		self.stringPairs.append(buff)
 
-			#Make sure it does not grow forever
-			if len(self.stringPairs) > 15000:
-				self.stringPairs = self.stringPairs[-15000:]
+		#Make sure it does not grow forever
+		if len(self.stringPairs) > 15000:
+			self.stringPairs = self.stringPairs[-15000:]
 
 	def ReadStringPair(self, stream):
 		ref = DecodeNumber(stream)
@@ -309,7 +309,8 @@ class O5mDecode(object):
 			if refIndex == 0:
 				typeAndRoleRaw = self.DecodeSingleString(objDataStream)
 				typeAndRole = typeAndRoleRaw.decode("utf-8")
-				self.ConsiderAddBuffToStringRefTable(typeAndRoleRaw)
+				if len(typeAndRoleRaw) < self.singleStringRefTableThreshold:
+					self.AddBuffToStringRefTable(typeAndRoleRaw)
 			else:
 				typeAndRole = self.stringPairs[-refIndex].decode("utf-8")
 
@@ -360,6 +361,7 @@ class O5mEncode(object):
 		self.funcStoreBounds = None
 		self.funcStoreIsDiff = None
 		self.refTableLengthThreshold = 253
+		self.singleStringRefTableThreshold = 251
 
 	def ResetDeltaCoding(self):
 		self.lastObjId = 0 #Used in delta encoding
@@ -436,15 +438,15 @@ class O5mEncode(object):
 
 		tmpStream.write(b"\x00")
 		tmpStream.write(encodedStrings)
-		self.ConsiderAddToRefTable(encodedStrings)
-
-	def ConsiderAddToRefTable(self, encodedStrings):
 		if len(encodedStrings) < self.refTableLengthThreshold:
-			self.stringPairs.append(encodedStrings)
+			self.AddToRefTable(encodedStrings)
 
-			#Limit size of reference table
-			if len(self.stringPairs) > 15000:
-				self.stringPairs = self.stringPairs[-15000:]
+	def AddToRefTable(self, encodedStrings):
+		self.stringPairs.append(encodedStrings)
+
+		#Limit size of reference table
+		if len(self.stringPairs) > 15000:
+			self.stringPairs = self.stringPairs[-15000:]
 
 	def StoreNode(self, objectId, metaData, tags, pos):
 		self.handle.write(b"\x10")
@@ -549,7 +551,8 @@ class O5mEncode(object):
 			except ValueError:
 				refStream.write(b'\x00') #String start byte
 				refStream.write(self.EncodeSingleString(typeCodeAndRole))
-				self.ConsiderAddToRefTable(typeCodeAndRole)
+				if len(typeCodeAndRole) < self.singleStringRefTableThreshold:
+					self.AddToRefTable(typeCodeAndRole)
 
 		encRefs = refStream.getvalue()
 		tmpStream.write(EncodeNumber(len(encRefs)))
