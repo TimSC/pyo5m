@@ -1,7 +1,3 @@
-# pyo5m
-o5m openstreetmap format encoder/decoder in python
-
-```python
 import o5m
 
 if __name__=="__main__":
@@ -24,5 +20,4 @@ if __name__=="__main__":
 	print "nodes", len(osmData2.nodes)
 	print "ways", len(osmData2.ways)
 	print "relations", len(osmData2.relations)
-```
 

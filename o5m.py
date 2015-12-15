@@ -108,7 +108,7 @@ class O5mDecode(object):
 	
 	def DecodeNext(self):
 		code = struct.unpack("B", self.handle.read(1))[0]
-		print "found", hex(code)
+		#print "found", hex(code)
 		if code == 0x10:
 			self.DecodeNode()
 			return False
