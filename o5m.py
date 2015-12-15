@@ -203,7 +203,7 @@ class O5mDecode(object):
 		if version != 0:
 			deltaTime = DecodeNumber(nodeDataStream, True)
 			self.lastTimeStamp += deltaTime
-			timestamp = datetime.datetime.utcfromtimestamp(self.lastChangeSet)
+			timestamp = datetime.datetime.utcfromtimestamp(self.lastTimeStamp)
 			#print "timestamp", self.lastTimeStamp, deltaTime
 			if self.lastTimeStamp != 0:
 				deltaChangeSet = DecodeNumber(nodeDataStream, True)
