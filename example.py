@@ -2,7 +2,7 @@ import OsmData
 
 if __name__=="__main__":
 
-	fi = open("dahab.o5m", "rb")
+	fi = open("o5mtest.o5m", "rb")
 	osmData = OsmData.OsmData()
 	osmData.LoadFromO5m(fi)
 	print ("nodes", len(osmData.nodes))
