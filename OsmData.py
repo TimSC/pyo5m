@@ -1,4 +1,4 @@
-import o5m
+import o5m, osmxml
 
 # ****** generic osm data store ******
 
@@ -37,6 +37,19 @@ class OsmData(object):
 			enc.StoreRelation(*relationData)
 		enc.Finish()
 	
+	def SaveToOsmXml(self, fi):
+		enc = osmxml.OsmXmlEncode(fi)
+		enc.StoreIsDiff(self.isDiff)
+		for bbox in self.bounds:
+			enc.StoreBounds(bbox)
+		for nodeData in self.nodes:
+			enc.StoreNode(*nodeData)
+		for wayData in self.ways:
+			enc.StoreWay(*wayData)
+		for relationData in self.relations:
+			enc.StoreRelation(*relationData)
+		enc.Finish()
+
 	def StoreNode(self, objectId, metaData, tags, pos):
 		self.nodes.append([objectId, metaData, tags, pos])
 

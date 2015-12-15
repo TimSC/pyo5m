@@ -13,10 +13,14 @@ if __name__=="__main__":
 	osmData.SaveToO5m(fi2)
 	fi2.close()
 
+	fi3 = open("o5mtest2.osm", "wb")
+	osmData.SaveToOsmXml(fi3)
+	fi3.close()
+
 	print ("Read data back")
-	fi3 = open("o5mtest2.o5m", "rb")
+	fi4 = open("o5mtest2.o5m", "rb")
 	osmData2 = OsmData.OsmData()
-	osmData2.LoadFromO5m(fi3)
+	osmData2.LoadFromO5m(fi4)
 	print ("nodes", len(osmData2.nodes))
 	print ("ways", len(osmData2.ways))
 	print ("relations", len(osmData2.relations))

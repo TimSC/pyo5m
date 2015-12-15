@@ -1,5 +1,5 @@
 # pyo5m
-o5m openstreetmap format encoder/decoder in python v2 and v3. Includes both stream decoding and static interpretations of data.
+o5m openstreetmap format encoder/decoder in python v2 and v3. Includes both stream decoding and static interpretations of data. It also includes a standard osm xml encoder.
 
 ```python
 from pyo5m import OsmData
