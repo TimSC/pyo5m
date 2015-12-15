@@ -560,7 +560,7 @@ class OsmData(object):
 		self.nodes=[]
 		self.ways=[]
 		self.relations=[]
-		self.bounds=None
+		self.bounds=[]
 	
 	def LoadFromO5m(self, fi):
 		content = O5mDecode(fi)
@@ -578,8 +578,8 @@ class OsmData(object):
 	def SaveToO5m(self, fi):
 		enc = O5mEncode(fi)
 		enc.StoreIsDiff(self.isDiff)
-		if self.bounds is not None:
-			enc.StoreBounds(self.bounds)
+		for bbox in self.bounds:
+			enc.StoreBounds(bbox)
 		for nodeData in self.nodes:
 			enc.StoreNode(*nodeData)
 		#enc.Sync()
@@ -602,7 +602,7 @@ class OsmData(object):
 		self.relations.append([objectId, metaData, tags, refs])
 
 	def StoreBounds(self, bbox):
-		self.bounds = bbox
+		self.bounds.append(bbox)
 
 	def StoreIsDiff(self, isDiff):
 		self.isDiff = isDiff
