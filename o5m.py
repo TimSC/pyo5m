@@ -167,9 +167,9 @@ class O5mDecode(object):
 		return outStr.getvalue()
 
 	def ConsiderAddToStringRefTable(self, firstStr, secondStr):
-		#Consider if to add pair to string reference table
-		combinedRaw = firstStr+b"\x00"+secondStr+b"\x00"
+		#Consider adding pair to string reference table
 		if len(firstStr) + len(secondStr) <= self.refTableLengthThreshold:
+			combinedRaw = firstStr+b"\x00"+secondStr+b"\x00"
 			self.AddBuffToStringRefTable(combinedRaw)
 
 	def AddBuffToStringRefTable(self, buff):
