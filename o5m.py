@@ -459,14 +459,14 @@ class O5mEncode(object):
 		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Position
-		lat = round(pos[0] * 1e7)
-		deltaLat = lat - self.lastLat
-		tmpStream.write(EncodeNumber(deltaLat, True))
-		self.lastLat = lat
 		lon = round(pos[1] * 1e7)
 		deltaLon = lon - self.lastLon
 		tmpStream.write(EncodeNumber(deltaLon, True))
 		self.lastLon = lon
+		lat = round(pos[0] * 1e7)
+		deltaLat = lat - self.lastLat
+		tmpStream.write(EncodeNumber(deltaLat, True))
+		self.lastLat = lat
 
 		for key in tags:
 			val = tags[key]
