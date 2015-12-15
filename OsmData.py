@@ -8,6 +8,7 @@ class OsmData(object):
 		self.ways=[]
 		self.relations=[]
 		self.bounds=[]
+		self.isDiff = False
 	
 	def LoadFromO5m(self, fi):
 		dec = o5m.O5mDecode(fi)
@@ -36,6 +37,18 @@ class OsmData(object):
 		for relationData in self.relations:
 			enc.StoreRelation(*relationData)
 		enc.Finish()
+
+	def LoadFromOsmXml(self, fi):
+		dec = osmxml.OsmXmlDecode(fi)
+		dec.funcStoreNode = self.StoreNode
+		dec.funcStoreWay = self.StoreWay
+		dec.funcStoreRelation = self.StoreRelation
+		dec.funcStoreBounds = self.StoreBounds
+		dec.funcStoreIsDiff = self.StoreIsDiff
+
+		eof = False
+		while not eof:
+			eof = dec.DecodeNext()
 	
 	def SaveToOsmXml(self, fi):
 		enc = osmxml.OsmXmlEncode(fi)

@@ -399,8 +399,8 @@ class O5mEncode(object):
 
 	def EncodeMetaData(self, version, timestamp, changeset, uid, username, outStream):
 		#Decode author and time stamp
-		outStream.write(EncodeNumber(version))
-		if version != 0:
+		if version != 0 and version != None:
+			outStream.write(EncodeNumber(version))
 			timestamp = calendar.timegm(timestamp.utctimetuple())
 			deltaTime = timestamp - self.lastTimeStamp
 			outStream.write(EncodeNumber(deltaTime, True))
@@ -418,6 +418,8 @@ class O5mEncode(object):
 				if username is not None:
 					encUsername = username.encode("utf-8")
 				self.WriteStringPair(encUid, encUsername, outStream)
+		else:
+			outStream.write(EncodeNumber(0))
 
 	def EncodeSingleString(self, strIn):
 		return strIn + b'\x00'
