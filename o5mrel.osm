@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <bounds minlat='26.4877822' minlon='24.2358398' maxlat='26.9318652' maxlon='24.760437' origin='FOSM API 0.6' />
+  <bounds minlat='26.4877822' minlon='24.2358398' maxlat='26.9318652' maxlon='24.760437' origin='OpenStreetMap server' />
+  <node id='-136' action='modify' visible='true' lat='26.843647754711284' lon='24.569955827074097' />
+  <node id='-135' action='modify' visible='true' lat='26.819855621575616' lon='24.63446249809873' />
+  <node id='-134' action='modify' visible='true' lat='26.74998535193452' lon='24.686067834918436' />
+  <node id='-133' action='modify' visible='true' lat='26.663163565094248' lon='24.6929485464944' />
+  <node id='-132' action='modify' visible='true' lat='26.593966164018035' lon='24.65854498861459' />
+  <node id='-131' action='modify' visible='true' lat='26.538578097679935' lon='24.579416805491043' />
+  <node id='-130' action='modify' visible='true' lat='26.541655914713235' lon='24.482226754480592' />
+  <node id='-129' action='modify' visible='true' lat='26.593966164018035' lon='24.40481874925103' />
+  <node id='-128' action='modify' visible='true' lat='26.671618150536407' lon='24.35407350137832' />
+  <node id='-127' action='modify' visible='true' lat='26.75689751451637' lon='24.36095421295428' />
+  <node id='-126' action='modify' visible='true' lat='26.817552891896312' lon='24.40309857135704' />
+  <node id='-123' action='modify' visible='true' lat='26.843647754711284' lon='24.503728978155472' />
+  <relation id='-140' action='modify' visible='true'>
+    <member type='node' ref='-135' role='yjqyTTKPqzlfskYnCS9XDke53XuBhqYgyMj8oF6VRa8izJrIelMsxyF5Yeu0NiCkImHGQavHV3yq0U2Vm69kAsQtLJim319BqnYG0A2S1cVuaVoe6EZKbuOXhaMeAN7ywPfSsOCvhiwHxitNapBl8pckCZo5xuwD3J4ykgJSIXAGnhufDuBEspqPUj8U9KwNe0gO5UlHUCo1Pbjjpod2JvaDw5ZhrY4ZCWS4IiNHwywVMsY1wX5XP248' />
+    <member type='node' ref='-136' role='6wr9EU3ftil8XX3l78D1dzjgUk8yEnSX7WqDpp7n9fWEicSrzRKZcAFVY6sXXn8lGEOjHYka1BddteYUXMcs7R7iaUDr2oFE4Ps6MlNfP3Ebw4kyqlNMQxycomOIwZ1eY9okaHHw5fGqgKRMfmA5A6m1XYb3jPWtMAcYiZvQDpjjzJ2LXQNfFPhuk1scJGr4ppIa3CplDf3MIRDkSPuRyKWHL5lC3RWVYjQEWOUkgQJ5OwkiZxbCY5R250' />
+    <member type='node' ref='-123' role='N6h5Mg1Q29HXFI1YnuMIwhW4abWkVaiUmzUhKfGdNcldRBp8zcMQy05niDDzGJb6gadycEUfC6PoWemvUcEPlePNZyrr2Xsg62yRVHBddMgpqCrwgOGlSMRaLXwymILeRsaO983dykldqiUsV90tRfIduFd3KkUHcpUgddt1WWKziM2LyEu94gniMavlzQNi4CVPt58vEKjRTG1dBJXoIMdp2zU4ZGBHmZ8lpqR7n8eW5muB8V6JY7249' />
+    <member type='node' ref='-129' role='yjqyTTKPqzlfskYnCS9XDke53XuBhqYgyMj8oF6VRa8izJrIelMsxyF5Yeu0NiCkImHGQavHV3yq0U2Vm69kAsQtLJim319BqnYG0A2S1cVuaVoe6EZKbuOXhaMeAN7ywPfSsOCvhiwHxitNapBl8pckCZo5xuwD3J4ykgJSIXAGnhufDuBEspqPUj8U9KwNe0gO5UlHUCo1Pbjjpod2JvaDw5ZhrY4ZCWS4IiNHwywVMsY1wX5XP248' />
+    <member type='node' ref='-130' role='Zfl2zq94zljzSafyqxHNqkDpUt6bQDPYHTJ4Fb77kcOHA4AdUq93DadqU4mUSTxr4vRsfe0Kxt7MJstluvJ75ZDfZRZkZWzuZmKPPFQh5dtSrtfnd8AMhJxJ3WWNmrdn7z45SginOxVlZa3YiQVoF5xdE6YnKpbFbpCoNAtfcL1M3aPHLQcSd8Ih5LGQBB8M7NrHGhokMkh7iTEaKwtQNpv4a0kcSBFITYz3lVxPXZYaqCCUkNauF3hP251' />
+    <member type='node' ref='-126' role='Zfl2zq94zljzSafyqxHNqkDpUt6bQDPYHTJ4Fb77kcOHA4AdUq93DadqU4mUSTxr4vRsfe0Kxt7MJstluvJ75ZDfZRZkZWzuZmKPPFQh5dtSrtfnd8AMhJxJ3WWNmrdn7z45SginOxVlZa3YiQVoF5xdE6YnKpbFbpCoNAtfcL1M3aPHLQcSd8Ih5LGQBB8M7NrHGhokMkh7iTEaKwtQNpv4a0kcSBFITYz3lVxPXZYaqCCUkNauF3hP251' />
+    <member type='node' ref='-131' role='6wr9EU3ftil8XX3l78D1dzjgUk8yEnSX7WqDpp7n9fWEicSrzRKZcAFVY6sXXn8lGEOjHYka1BddteYUXMcs7R7iaUDr2oFE4Ps6MlNfP3Ebw4kyqlNMQxycomOIwZ1eY9okaHHw5fGqgKRMfmA5A6m1XYb3jPWtMAcYiZvQDpjjzJ2LXQNfFPhuk1scJGr4ppIa3CplDf3MIRDkSPuRyKWHL5lC3RWVYjQEWOUkgQJ5OwkiZxbCY5R250' />
+    <member type='node' ref='-127' role='N6h5Mg1Q29HXFI1YnuMIwhW4abWkVaiUmzUhKfGdNcldRBp8zcMQy05niDDzGJb6gadycEUfC6PoWemvUcEPlePNZyrr2Xsg62yRVHBddMgpqCrwgOGlSMRaLXwymILeRsaO983dykldqiUsV90tRfIduFd3KkUHcpUgddt1WWKziM2LyEu94gniMavlzQNi4CVPt58vEKjRTG1dBJXoIMdp2zU4ZGBHmZ8lpqR7n8eW5muB8V6JY7249' />
+    <member type='node' ref='-133' role='yjqyTTKPqzlfskYnCS9XDke53XuBhqYgyMj8oF6VRa8izJrIelMsxyF5Yeu0NiCkImHGQavHV3yq0U2Vm69kAsQtLJim319BqnYG0A2S1cVuaVoe6EZKbuOXhaMeAN7ywPfSsOCvhiwHxitNapBl8pckCZo5xuwD3J4ykgJSIXAGnhufDuBEspqPUj8U9KwNe0gO5UlHUCo1Pbjjpod2JvaDw5ZhrY4ZCWS4IiNHwywVMsY1wX5XP248' />
+    <member type='node' ref='-132' role='Zfl2zq94zljzSafyqxHNqkDpUt6bQDPYHTJ4Fb77kcOHA4AdUq93DadqU4mUSTxr4vRsfe0Kxt7MJstluvJ75ZDfZRZkZWzuZmKPPFQh5dtSrtfnd8AMhJxJ3WWNmrdn7z45SginOxVlZa3YiQVoF5xdE6YnKpbFbpCoNAtfcL1M3aPHLQcSd8Ih5LGQBB8M7NrHGhokMkh7iTEaKwtQNpv4a0kcSBFITYz3lVxPXZYaqCCUkNauF3hP251' />
+    <tag k='type' v='foo' />
+  </relation>
+</osm>

@@ -1,6 +1,6 @@
-import struct, datetime, six, calendar, datetime
 import xml.sax.saxutils as sax
 import xml.parsers.expat as expat
+import codecs, datetime
 
 def ValOrNone(dictIn, key):
 	if key in dictIn:
@@ -33,6 +33,8 @@ class DecodeHandler(object):
 				v = int(v)
 			elif k == "uid":
 				v = int(v)
+			elif k == "timestamp":
+				v = datetime.datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ")
 			out[k] = v
 		return out
 
@@ -114,63 +116,60 @@ class OsmXmlDecode(object):
 
 class OsmXmlEncode(object):
 	def __init__(self, handle):
-		self.outFi = handle
+		self.writer = codecs.getwriter("utf-8")(handle)
 
 	def StoreIsDiff(self, isDiff):
-		self.outFi.write("<?xml version='1.0' encoding='UTF-8'?>\n".encode("utf-8"))
-		self.outFi.write("<osm version='0.6' upload='false' generator='pyo5m'>\n".encode("utf-8"))
+		self.writer.write(u"<?xml version='1.0' encoding='UTF-8'?>\n")
+		self.writer.write(u"<osm version='0.6' upload='false' generator='pyo5m'>\n")
 
 	def StoreBounds(self, bbox):
-		self.outFi.write("  <bounds minlat='{0}' minlon='{1}' maxlat='{2}' maxlon='{3}' />\n".format(bbox[1], bbox[0], bbox[3], bbox[2]).encode("utf-8"))
+		self.writer.write(u"  <bounds minlat='{0}' minlon='{1}' maxlat='{2}' maxlon='{3}' />\n".format(bbox[1], bbox[0], bbox[3], bbox[2]))
 
 	def EncodeMetaData(self, metaData, outStream):
 		version, timestamp, changeset, uid, username = metaData
 		if timestamp is not None:
-			outStream.write(" timestamp='{0}'".format(timestamp.isoformat()).encode("utf-8"))
+			outStream.write(u" timestamp='{0}'".format(timestamp.isoformat()))
 		if version is not None:
-			outStream.write(" version='{0}'".format(int(version)).encode("utf-8"))
+			outStream.write(u" version='{0}'".format(int(version)))
 		if uid is not None:
-			outStream.write(" uid='{0}'".format(int(uid)).encode("utf-8"))
+			outStream.write(u" uid='{0}'".format(int(uid)))
 		if username is not None:
-			outStream.write(" user={0}".format(sax.quoteattr(username)).encode("utf-8"))
+			outStream.write(u" user={0}".format(sax.quoteattr(username)))
 		if changeset is not None:
-			outStream.write(" changeset='{0}'".format(int(changeset)).encode("utf-8"))
+			outStream.write(u" changeset='{0}'".format(int(changeset)))
 
 	def StoreNode(self, objectId, metaData, tags, pos):
-		self.outFi.write("  <node id='{0}' lat='{1}' lon='{2}'".format(int(objectId), float(pos[0]), float(pos[1])).encode("utf-8"))
-		self.EncodeMetaData(metaData, self.outFi)
+		self.writer.write(u"  <node id='{0}' lat='{1}' lon='{2}'".format(int(objectId), float(pos[0]), float(pos[1])))
+		self.EncodeMetaData(metaData, self.writer)
 		if len(tags) > 0:
-			self.outFi.write(">\n".encode("utf-8"))
+			self.writer.write(u">\n")
 			for k in tags:
-				self.outFi.write("    <tag k={0} v={1} />\n".format(sax.quoteattr(k), sax.quoteattr(tags[k])).encode("utf-8"))
-			self.outFi.write("  </node>\n".encode("utf-8"))
+				self.writer.write(u"    <tag k={0} v={1} />\n".format(sax.quoteattr(k), sax.quoteattr(tags[k])))
+			self.writer.write("  </node>\n")
 		else:
-			self.outFi.write(" />\n".encode("utf-8"))
+			self.writer.write(u" />\n")
 
 	def StoreWay(self, objectId, metaData, tags, refs):
-		self.outFi.write("  <way id='{0}'".format(int(objectId)).encode("utf-8"))
-		self.EncodeMetaData(metaData, self.outFi)
-		self.outFi.write(">\n".encode("utf-8"))
+		self.writer.write(u"  <way id='{0}'".format(int(objectId)))
+		self.EncodeMetaData(metaData, self.writer)
+		self.writer.write(u">\n")
 		for ref in refs:
-			self.outFi.write("    <nd ref='{0}' />\n".format(int(ref)).encode("utf-8"))
+			self.writer.write(u"    <nd ref='{0}' />\n".format(int(ref)))
 		for k in tags:
-			self.outFi.write("    <tag k={0} v={1} />\n".format(sax.quoteattr(k), sax.quoteattr(tags[k])).encode("utf-8"))
-		self.outFi.write("  </way>\n".encode("utf-8"))
+			self.writer.write(u"    <tag k={0} v={1} />\n".format(sax.quoteattr(k), sax.quoteattr(tags[k])))
+		self.writer.write(u"  </way>\n")
 
 	def StoreRelation(self, objectId, metaData, tags, refs):
-		self.outFi.write("  <relation id='{0}'".format(int(objectId)).encode("utf-8"))
-		self.EncodeMetaData(metaData, self.outFi)
-		self.outFi.write(">\n".encode("utf-8"))
+		self.writer.write(u"  <relation id='{0}'".format(int(objectId)))
+		self.EncodeMetaData(metaData, self.writer)
+		self.writer.write(u">\n")
 		for typeStr, refId, role in refs:
-			self.outFi.write("    <member type={0} ref='{1}' role={2} />\n".format(sax.quoteattr(typeStr), int(refId), sax.quoteattr(role)).encode("utf-8"))
+			self.writer.write(u"    <member type={0} ref='{1}' role={2} />\n".format(sax.quoteattr(typeStr), int(refId), sax.quoteattr(role)))
 		for k in tags:
-			self.outFi.write("    <tag k={0} v={1} />\n".format(sax.quoteattr(k), sax.quoteattr(tags[k])).encode("utf-8"))
-		self.outFi.write("  </relation>\n".encode("utf-8"))
+			self.writer.write(u"    <tag k={0} v={1} />\n".format(sax.quoteattr(k), sax.quoteattr(tags[k])))
+		self.writer.write(u"  </relation>\n")
 
 	def Finish(self):
-		self.outFi.write("</osm>\n".encode("utf-8"))
-
-if __name__=="__main__":
-	TestDecodeNumber()
-	TestEncodeNumber()
+		self.writer.write(u"</osm>\n")
+		self.writer.flush()
 
