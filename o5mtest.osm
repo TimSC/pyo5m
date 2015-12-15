@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.6" generator="osmconvert 0.7T">
+	<bounds minlat="26.273714" minlon="25.4882813" maxlat="26.6670958" maxlon="25.9277344"/>
+	<node id="-191" lat="26.5681965" lon="25.76427">
+		<tag k="foo" v="b5i7ZN5kEQOuxB8LvRL1NSQuy3AU3kaIhhft59IVbOja9Q05oRZDmGTb4ZpJ7xxzdn0GMVaH7STMPymnVE1HGmGNbDAu0RYs6uFAUFhu7kdWGjAu8ZRs4lZbKlZfR6kJvuJ8tIgJ0WC3lXv3TsgGTEdggLGhfqYhWIUleonyHSTYcgfrIpV5hK12vMBzfRYYOjAFp2oquMDlgPu6VgueCLKnUpWggZozNtbZBmUmNQhpP240"/>
+		<tag k="length" v="240"/>
+	</node>
+	<node id="-190" lat="26.5974333" lon="25.8935209">
+		<tag k="foo" v="Zfl2zq94zljzSafyqxHNqkDpUt6bQDPYHTJ4Fb77kcOHA4AdUq93DadqU4mUSTxr4vRsfe0Kxt7MJstluvJ75ZDfZRZkZWzuZmKPPFQh5dtSrtfnd8AMhJxJ3WWNmrdn7z45SginOxVlZa3YiQVoF5xdE6YnKpbFbpCoNAtfcL1M3aPHLQcSd8Ih5LGQBB8M7NrHGhokMkh7iTEaKwtQNpv4a0kcSBFITYz3lVxPXZYaqCCUkNauF3hP251"/>
+		<tag k="length" v="251"/>
+	</node>
+	<node id="-189" lat="26.4144104" lon="25.8038055">
+		<tag k="foo" v="RlzP0RBYIrBSWjeoDnjgoVt2S5sTVWyKKLIOGHk433dkV4HqfdQ7J6iR9NJmAUKQ6NRIBgdXuAwOhbE4brcE35p8aruPwigMMyeMxDRobLEp9MRuZTfQZUF56e0KZMUgOzIOWJlXKz5etqmyn2MfaFzUvCjmZaMFPh76N2oXgQ3SOGKtntafO3kJZxiQrcVPMhdqWJBbGjgewI7z0jWSnHL4VrITboipC7TyfcTA1um4ymfuNSP246"/>
+		<tag k="length" v="246"/>
+	</node>
+	<node id="-188" lat="26.4239429" lon="25.726255">
+		<tag k="foo" v="YQGkzeTJ4PDE5J8nl3NZISWsEBHQQRilGV8NyJWbVktp5a4URq4O4KC6jmUsUkC4r7ozaOEnCeFrV9GDb8xiOxvLAcWwKoZAxlCZW75eRdKKhLghickypGLF22id5tjloB8UTZ5WChcykVsehEhqtjBXt5qPApfCon2I46RHVRNBrzXtUwEUb6zLO6EGbfPE8xk3utWAC9UAEX7FSJW6CisncNucXzBtIRDKtSp2XE7a2J3242"/>
+		<tag k="length" v="242"/>
+	</node>
+	<node id="-187" lat="26.5103807" lon="25.7992437">
+		<tag k="foo" v="yjqyTTKPqzlfskYnCS9XDke53XuBhqYgyMj8oF6VRa8izJrIelMsxyF5Yeu0NiCkImHGQavHV3yq0U2Vm69kAsQtLJim319BqnYG0A2S1cVuaVoe6EZKbuOXhaMeAN7ywPfSsOCvhiwHxitNapBl8pckCZo5xuwD3J4ykgJSIXAGnhufDuBEspqPUj8U9KwNe0gO5UlHUCo1Pbjjpod2JvaDw5ZhrY4ZCWS4IiNHwywVMsY1wX5XP248"/>
+		<tag k="length" v="248"/>
+	</node>
+	<node id="-186" lat="26.5545954" lon="25.8243336">
+		<tag k="foo" v="N6h5Mg1Q29HXFI1YnuMIwhW4abWkVaiUmzUhKfGdNcldRBp8zcMQy05niDDzGJb6gadycEUfC6PoWemvUcEPlePNZyrr2Xsg62yRVHBddMgpqCrwgOGlSMRaLXwymILeRsaO983dykldqiUsV90tRfIduFd3KkUHcpUgddt1WWKziM2LyEu94gniMavlzQNi4CVPt58vEKjRTG1dBJXoIMdp2zU4ZGBHmZ8lpqR7n8eW5muB8V6JY7249"/>
+		<tag k="length" v="249"/>
+	</node>
+	<node id="-185" lat="26.3272192" lon="25.8174909">
+		<tag k="foo" v="T76CABwUCkjPApcn1diZzusqN4HHYMdiviPi8yN2oaXbdsXYuIuw7YNzQ92EFvVe51lLvSzZR86HbErvB7jaoUMRgXVAT5za0SpA8SwIWjlus3Bsx0MplWQww6hPxbw1NMOTeldgs3OEFE6NQS0s3RttKvAEfEhrUmb9MVJwdqj2GzFc7tCv0xFkwF0dxdHubmI0IjUdc2S7JgsZsyOTlYo7H6JtHjA2jLAbgVvh4z2l7Fmg0M245"/>
+		<tag k="length" v="245"/>
+	</node>
+	<node id="-184" lat="26.3585611" lon="25.6783561">
+		<tag k="foo" v="bHMofs9vpgpPMWseFAd2mdG9z0sMeKSqM5J4xl2vNE16JvFMuf8GO6gXphlLWOfZ8tnuDay7hr2lp477Zkom0mRZJvd8BlbYxAAO1oyDQdA43zRYb9YnzNQx5drDIIXJ6m1hC4KPDUdd2bPFQabi3YLtDaPtQWtmx6jEdlkXiI77x9pBiSisikWQDJoybywOQYsytxoByJ5v7YulNy1QIwRVmVkSwfiDN5rB1wWG938ss9ti243"/>
+		<tag k="length" v="243"/>
+	</node>
+	<node id="-183" lat="26.5919945" lon="25.8448617">
+		<tag k="foo" v="6wr9EU3ftil8XX3l78D1dzjgUk8yEnSX7WqDpp7n9fWEicSrzRKZcAFVY6sXXn8lGEOjHYka1BddteYUXMcs7R7iaUDr2oFE4Ps6MlNfP3Ebw4kyqlNMQxycomOIwZ1eY9okaHHw5fGqgKRMfmA5A6m1XYb3jPWtMAcYiZvQDpjjzJ2LXQNfFPhuk1scJGr4ppIa3CplDf3MIRDkSPuRyKWHL5lC3RWVYjQEWOUkgQJ5OwkiZxbCY5R250"/>
+		<tag k="length" v="250"/>
+	</node>
+	<node id="-182" lat="26.4641072" lon="25.771873">
+		<tag k="foo" v="qWwVz0eWqDGSOUQvgo9CCgYCUI94KhXSe8cUjlND5Plocdnxr21AnQP3k9m1zmLH6GshvjJBlZf04FEAyOPgCT924fkUcqGELmaigSyj2TFLP8l6HyDXdhQQDpHHfctT9j7GjQ8u6pOQYDJMLpIu8qbe8C6QEGvHfsIPRYSZsbmn6UpKpvS9tg1sXTtoas8NXHll4ZfBE91z5ynoKVU7iCsOoykVB54YCScSMCAGpnsh21czSMLg247"/>
+		<tag k="ref" v="247"/>
+	</node>
+	<node id="-181" lat="26.4967728" lon="25.6829179">
+		<tag k="foo" v="yFUIxncs80kS7q8R48is8zsCReHWiiUxew7N6mdrkbPvokjEggqEprNt90ehWcOr8QrHqSoFPPxgcGxvpG4UnP9oMCRJuD52iVArnBsJBTyh5LU0umOHYlfSFxGjNwSUopCodvYItcWYbjNPghTSOC2si90A1yoZJ3tpouzFibuhlR39Liuibi9ZJZW8mXMmTW5cOGRRhsIVuIt4q5iLsnz5wI4wwH6IDG96ihYBUfDxkN241"/>
+		<tag k="length" v="241"/>
+	</node>
+	<node id="-180" lat="26.3531109" lon="25.7254947">
+		<tag k="foo" v="744mes9HvmeHqq4ZLe3UPjVtIzaCAal2j6By8xH00Cci4yveswOvCagOF1SuEAiRvdjJj3A58Qkry1ox5rGfUPEsd9BwUPsQbC5N3BqdgiVp3aW5abaMJn5mmbZau9VNzfnMCb7QSl1N0e6BR4zdYoZPwGidHP1mnGcGw8pXkenrNqKHQlxneyxPV2JE42iBzeYyDM4ZQ73DS1melw9KovCRcd8AYcPsJmX5LXYb7zucliOe5244"/>
+		<tag k="length" v="244"/>
+	</node>
+	<node id="-152" lat="26.6202057" lon="25.858167">
+		<tag k="foo" v="Zfl2zq94zljzSafyqxHNqkDpUt6bQDPYHTJ4Fb77kcOHA4AdUq93DadqU4mUSTxr4vRsfe0Kxt7MJstluvJ75ZDfZRZkZWzuZmKPPFQh5dtSrtfnd8AMhJxJ3WWNmrdn7z45SginOxVlZa3YiQVoF5xdE6YnKpbFbpCoNAtfcL1M3aPHLQcSd8Ih5LGQBB8M7NrHGhokMkh7iTEaKwtQNpv4a0kcSBFITYz3lVxPXZYaqCCUkNauF3hP251"/>
+		<tag k="length" v="251"/>
+	</node>
+	<node id="-139" lat="26.614768" lon="25.8095078">
+		<tag k="foo" v="6wr9EU3ftil8XX3l78D1dzjgUk8yEnSX7WqDpp7n9fWEicSrzRKZcAFVY6sXXn8lGEOjHYka1BddteYUXMcs7R7iaUDr2oFE4Ps6MlNfP3Ebw4kyqlNMQxycomOIwZ1eY9okaHHw5fGqgKRMfmA5A6m1XYb3jPWtMAcYiZvQDpjjzJ2LXQNfFPhuk1scJGr4ppIa3CplDf3MIRDkSPuRyKWHL5lC3RWVYjQEWOUkgQJ5OwkiZxbCY5R250"/>
+		<tag k="length" v="250"/>
+	</node>
+	<node id="-121" lat="26.5773763" lon="25.7889797">
+		<tag k="foo" v="N6h5Mg1Q29HXFI1YnuMIwhW4abWkVaiUmzUhKfGdNcldRBp8zcMQy05niDDzGJb6gadycEUfC6PoWemvUcEPlePNZyrr2Xsg62yRVHBddMgpqCrwgOGlSMRaLXwymILeRsaO983dykldqiUsV90tRfIduFd3KkUHcpUgddt1WWKziM2LyEu94gniMavlzQNi4CVPt58vEKjRTG1dBJXoIMdp2zU4ZGBHmZ8lpqR7n8eW5muB8V6JY7249"/>
+		<tag k="length" v="249"/>
+	</node>
+	<node id="-15" lat="26.3500451" lon="25.782137">
+		<tag k="foo" v="T76CABwUCkjPApcn1diZzusqN4HHYMdiviPi8yN2oaXbdsXYuIuw7YNzQ92EFvVe51lLvSzZR86HbErvB7jaoUMRgXVAT5za0SpA8SwIWjlus3Bsx0MplWQww6hPxbw1NMOTeldgs3OEFE6NQS0s3RttKvAEfEhrUmb9MVJwdqj2GzFc7tCv0xFkwF0dxdHubmI0IjUdc2S7JgsZsyOTlYo7H6JtHjA2jLAbgVvh4z2l7Fmg0M245"/>
+		<tag k="length" v="245"/>
+	</node>
+	<node id="-14" lat="26.3759318" lon="25.6901408">
+		<tag k="foo" v="744mes9HvmeHqq4ZLe3UPjVtIzaCAal2j6By8xH00Cci4yveswOvCagOF1SuEAiRvdjJj3A58Qkry1ox5rGfUPEsd9BwUPsQbC5N3BqdgiVp3aW5abaMJn5mmbZau9VNzfnMCb7QSl1N0e6BR4zdYoZPwGidHP1mnGcGw8pXkenrNqKHQlxneyxPV2JE42iBzeYyDM4ZQ73DS1melw9KovCRcd8AYcPsJmX5LXYb7zucliOe5244"/>
+		<tag k="length" v="244"/>
+	</node>
+	<node id="-13" lat="26.4372191" lon="25.7684516">
+		<tag k="foo" v="RlzP0RBYIrBSWjeoDnjgoVt2S5sTVWyKKLIOGHk433dkV4HqfdQ7J6iR9NJmAUKQ6NRIBgdXuAwOhbE4brcE35p8aruPwigMMyeMxDRobLEp9MRuZTfQZUF56e0KZMUgOzIOWJlXKz5etqmyn2MfaFzUvCjmZaMFPh76N2oXgQ3SOGKtntafO3kJZxiQrcVPMhdqWJBbGjgewI7z0jWSnHL4VrITboipC7TyfcTA1um4ymfuNSP246"/>
+		<tag k="length" v="246"/>
+	</node>
+	<node id="-11" lat="26.486906" lon="25.736519">
+		<tag k="foo" v="qWwVz0eWqDGSOUQvgo9CCgYCUI94KhXSe8cUjlND5Plocdnxr21AnQP3k9m1zmLH6GshvjJBlZf04FEAyOPgCT924fkUcqGELmaigSyj2TFLP8l6HyDXdhQQDpHHfctT9j7GjQ8u6pOQYDJMLpIu8qbe8C6QEGvHfsIPRYSZsbmn6UpKpvS9tg1sXTtoas8NXHll4ZfBE91z5ynoKVU7iCsOoykVB54YCScSMCAGpnsh21czSMLg247"/>
+		<tag k="ref" v="247"/>
+	</node>
+	<node id="-10" lat="26.5331704" lon="25.7638898">
+		<tag k="foo" v="yjqyTTKPqzlfskYnCS9XDke53XuBhqYgyMj8oF6VRa8izJrIelMsxyF5Yeu0NiCkImHGQavHV3yq0U2Vm69kAsQtLJim319BqnYG0A2S1cVuaVoe6EZKbuOXhaMeAN7ywPfSsOCvhiwHxitNapBl8pckCZo5xuwD3J4ykgJSIXAGnhufDuBEspqPUj8U9KwNe0gO5UlHUCo1Pbjjpod2JvaDw5ZhrY4ZCWS4IiNHwywVMsY1wX5XP248"/>
+		<tag k="length" v="248"/>
+	</node>
+	<node id="-8" lat="26.3813808" lon="25.6430022">
+		<tag k="foo" v="bHMofs9vpgpPMWseFAd2mdG9z0sMeKSqM5J4xl2vNE16JvFMuf8GO6gXphlLWOfZ8tnuDay7hr2lp477Zkom0mRZJvd8BlbYxAAO1oyDQdA43zRYb9YnzNQx5drDIIXJ6m1hC4KPDUdd2bPFQabi3YLtDaPtQWtmx6jEdlkXiI77x9pBiSisikWQDJoybywOQYsytxoByJ5v7YulNy1QIwRVmVkSwfiDN5rB1wWG938ss9ti243"/>
+		<tag k="length" v="243"/>
+	</node>
+	<node id="-6" lat="26.4467498" lon="25.6909011">
+		<tag k="foo" v="YQGkzeTJ4PDE5J8nl3NZISWsEBHQQRilGV8NyJWbVktp5a4URq4O4KC6jmUsUkC4r7ozaOEnCeFrV9GDb8xiOxvLAcWwKoZAxlCZW75eRdKKhLghickypGLF22id5tjloB8UTZ5WChcykVsehEhqtjBXt5qPApfCon2I46RHVRNBrzXtUwEUb6zLO6EGbfPE8xk3utWAC9UAEX7FSJW6CisncNucXzBtIRDKtSp2XE7a2J3242"/>
+		<tag k="length" v="242"/>
+	</node>
+	<node id="-4" lat="26.5195652" lon="25.647564">
+		<tag k="foo" v="yFUIxncs80kS7q8R48is8zsCReHWiiUxew7N6mdrkbPvokjEggqEprNt90ehWcOr8QrHqSoFPPxgcGxvpG4UnP9oMCRJuD52iVArnBsJBTyh5LU0umOHYlfSFxGjNwSUopCodvYItcWYbjNPghTSOC2si90A1yoZJ3tpouzFibuhlR39Liuibi9ZJZW8mXMmTW5cOGRRhsIVuIt4q5iLsnz5wI4wwH6IDG96ihYBUfDxkN241"/>
+		<tag k="length" v="241"/>
+	</node>
+	<node id="-3" lat="26.5909747" lon="25.728916">
+		<tag k="foo" v="b5i7ZN5kEQOuxB8LvRL1NSQuy3AU3kaIhhft59IVbOja9Q05oRZDmGTb4ZpJ7xxzdn0GMVaH7STMPymnVE1HGmGNbDAu0RYs6uFAUFhu7kdWGjAu8ZRs4lZbKlZfR6kJvuJ8tIgJ0WC3lXv3TsgGTEdggLGhfqYhWIUleonyHSTYcgfrIpV5hK12vMBzfRYYOjAFp2oquMDlgPu6VgueCLKnUpWggZozNtbZBmUmNQhpP240"/>
+		<tag k="length" v="240"/>
+	</node>
+	<way id="-193">
+		<nd ref="-187"/>
+		<nd ref="-182"/>
+	</way>
+	<way id="-192">
+		<nd ref="-191"/>
+		<nd ref="-181"/>
+		<nd ref="-188"/>
+		<nd ref="-184"/>
+		<tag k="spam" v="eggs"/>
+	</way>
+	<way id="-12">
+		<nd ref="-10"/>
+		<nd ref="-11"/>
+	</way>
+	<way id="-5">
+		<nd ref="-3"/>
+		<nd ref="-4"/>
+		<nd ref="-6"/>
+		<nd ref="-8"/>
+	</way>
+	<relation id="-241">
+		<member type="way" ref="-5" role="across"/>
+		<member type="way" ref="-12" role="backward"/>
+		<member type="node" ref="-121" role="c"/>
+		<member type="node" ref="-186" role="device"/>
+		<member type="node" ref="-13" role="east"/>
+		<tag k="type" v="test"/>
+	</relation>
+</osm>
