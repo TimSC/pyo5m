@@ -1,5 +1,5 @@
 # pyo5m
-o5m openstreetmap format encoder/decoder in python
+o5m openstreetmap format encoder/decoder in python v2 and v3.
 
 ```python
 import o5m

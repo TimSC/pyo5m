@@ -1,4 +1,4 @@
-import struct, cStringIO, datetime
+import struct, datetime, six
 
 # ****** o5m utilities ******
 
@@ -23,18 +23,18 @@ def DecodeNumber(stream, signed=False):
 	return total
 
 def TestDecodeNumber():
-	assert (DecodeNumber(cStringIO.StringIO(b'\x05')) == 5)
-	assert (DecodeNumber(cStringIO.StringIO(b'\x7f')) == 127)
-	assert (DecodeNumber(cStringIO.StringIO(b'\xc3\x02')) == 323)
-	assert (DecodeNumber(cStringIO.StringIO(b'\x80\x80\x01')) == 16384)
-	assert (DecodeNumber(cStringIO.StringIO(b'\x08'), True) == 4)
-	assert (DecodeNumber(cStringIO.StringIO(b'\x80\x01'), True) == 64)
-	assert (DecodeNumber(cStringIO.StringIO(b'\x03'), True) == -2)
-	assert (DecodeNumber(cStringIO.StringIO(b'\x05'), True) == -3)
-	assert (DecodeNumber(cStringIO.StringIO(b'\x81\x01'), True) == -65)
+	assert (DecodeNumber(six.BytesIO(b'\x05')) == 5)
+	assert (DecodeNumber(six.BytesIO(b'\x7f')) == 127)
+	assert (DecodeNumber(six.BytesIO(b'\xc3\x02')) == 323)
+	assert (DecodeNumber(six.BytesIO(b'\x80\x80\x01')) == 16384)
+	assert (DecodeNumber(six.BytesIO(b'\x08'), True) == 4)
+	assert (DecodeNumber(six.BytesIO(b'\x80\x01'), True) == 64)
+	assert (DecodeNumber(six.BytesIO(b'\x03'), True) == -2)
+	assert (DecodeNumber(six.BytesIO(b'\x05'), True) == -3)
+	assert (DecodeNumber(six.BytesIO(b'\x81\x01'), True) == -65)
 
 def EncodeNumber(num, signed=False):
-	out = cStringIO.StringIO()
+	out = six.BytesIO()
 	num = int(num)
 
 	#Least significant byte
@@ -156,7 +156,7 @@ class O5mDecode(object):
 			self.funcStoreBounds([x1, y1, x2, y2])
 
 	def DecodeSingleString(self, stream):
-		outStr = cStringIO.StringIO()
+		outStr = six.BytesIO()
 		code = 0x01
 		while code != 0x00:
 			rawVal = stream.read(1)
@@ -184,7 +184,7 @@ class O5mDecode(object):
 			self.ConsiderAddToStringRefTable(firstStr, secondStr)
 		else:
 			#print "ref", ref
-			prevPair = cStringIO.StringIO(self.stringPairs[-ref])
+			prevPair = six.BytesIO(self.stringPairs[-ref])
 			firstStr = self.DecodeSingleString(prevPair)
 			secondStr = self.DecodeSingleString(prevPair)
 		return firstStr, secondStr
@@ -209,7 +209,7 @@ class O5mDecode(object):
 				firstString, secondString = self.ReadStringPair(nodeDataStream)
 
 				if len(firstString) > 0:
-					uid = DecodeNumber(cStringIO.StringIO(firstString))
+					uid = DecodeNumber(six.BytesIO(firstString))
 					#print "uid", uid
 				if len(secondString) > 0:
 					username = secondString.decode("utf-8")
@@ -221,7 +221,7 @@ class O5mDecode(object):
 		nodeData = self.handle.read(length)
 
 		#Decode object ID
-		nodeDataStream = cStringIO.StringIO(nodeData)
+		nodeDataStream = six.BytesIO(nodeData)
 		deltaId = DecodeNumber(nodeDataStream, True)
 		self.lastObjId += deltaId
 		objectId = self.lastObjId 
@@ -251,7 +251,7 @@ class O5mDecode(object):
 		objData = self.handle.read(length)
 
 		#Decode object ID
-		objDataStream = cStringIO.StringIO(objData)
+		objDataStream = six.BytesIO(objData)
 		deltaId = DecodeNumber(objDataStream, True)
 		self.lastObjId += deltaId
 		objectId = self.lastObjId 
@@ -285,7 +285,7 @@ class O5mDecode(object):
 		objData = self.handle.read(length)
 
 		#Decode object ID
-		objDataStream = cStringIO.StringIO(objData)
+		objDataStream = six.BytesIO(objData)
 		deltaId = DecodeNumber(objDataStream, True)
 		self.lastObjId += deltaId
 		objectId = self.lastObjId 
@@ -301,9 +301,9 @@ class O5mDecode(object):
 		while objDataStream.tell() < refStart + refLen:
 			deltaRef = DecodeNumber(objDataStream, True)
 			DecodeNumber(objDataStream) #String start byte
-			typeAndRole = self.DecodeSingleString(objDataStream)
+			typeAndRole = self.DecodeSingleString(objDataStream).decode("utf-8")
 			typeCode = int(typeAndRole[0])
-			role = typeAndRole[1:].decode("utf-8")
+			role = typeAndRole[1:]
 			refId = None
 			if typeCode == 0:
 				self.lastRefNode += deltaRef
@@ -435,7 +435,7 @@ class O5mEncode(object):
 		self.handle.write(b"\x10")
 
 		#Object ID
-		tmpStream = cStringIO.StringIO()
+		tmpStream = six.BytesIO()
 		deltaId = objectId - self.lastObjId
 		tmpStream.write(EncodeNumber(deltaId, True))
 		self.lastObjId = objectId
@@ -465,7 +465,7 @@ class O5mEncode(object):
 		self.handle.write(b"\x11")
 
 		#Object ID
-		tmpStream = cStringIO.StringIO()
+		tmpStream = six.BytesIO()
 		deltaId = objectId - self.lastObjId
 		tmpStream.write(EncodeNumber(deltaId, True))
 		self.lastObjId = objectId
@@ -475,7 +475,7 @@ class O5mEncode(object):
 		self.EncodeMetaData(version, timestamp, uid, changeset, username, tmpStream)
 
 		#Store nodes
-		refStream = cStringIO.StringIO()
+		refStream = six.BytesIO()
 		for ref in refs:
 			deltaRef = ref - self.lastRefNode
 			refStream.write(EncodeNumber(deltaRef, True))
@@ -498,7 +498,7 @@ class O5mEncode(object):
 		self.handle.write(b"\x12")
 
 		#Object ID
-		tmpStream = cStringIO.StringIO()
+		tmpStream = six.BytesIO()
 		deltaId = objectId - self.lastObjId
 		tmpStream.write(EncodeNumber(deltaId, True))
 		self.lastObjId = objectId
@@ -508,10 +508,10 @@ class O5mEncode(object):
 		self.EncodeMetaData(version, timestamp, uid, changeset, username, tmpStream)
 
 		#Store referenced children
-		refStream = cStringIO.StringIO()
+		refStream = six.BytesIO()
 		for typeStr, refId, role in refs:
-
 			typeCode = None
+			deltaRef = None
 			if typeStr == "node":
 				typeCode = 0
 				deltaRef = refId - self.lastRefNode
@@ -611,16 +611,3 @@ if __name__=="__main__":
 	TestDecodeNumber()
 	TestEncodeNumber()
 	
-	fi = open("o5mtest.o5m", "rb")
-	osmData = OsmData()
-	osmData.LoadFromO5m(fi)
-
-	fi2 = open("o5mtest2.o5m", "wb")
-	osmData.SaveToO5m(fi2)
-	fi2.close()
-
-	print "Read data back"
-	fi3 = open("o5mtest2.o5m", "rb")
-	osmData2 = OsmData()
-	osmData2.LoadFromO5m(fi3)
-
