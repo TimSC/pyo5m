@@ -403,7 +403,10 @@ class O5mEncode(object):
 		#Decode author and time stamp
 		if version != 0 and version != None:
 			outStream.write(EncodeNumber(version))
-			timestamp = calendar.timegm(timestamp.utctimetuple())
+			if timestamp != None:
+				timestamp = calendar.timegm(timestamp.utctimetuple())
+			else:
+				timestamp = 0
 			deltaTime = timestamp - self.lastTimeStamp
 			outStream.write(EncodeNumber(deltaTime, True))
 			self.lastTimeStamp = timestamp
