@@ -1,4 +1,4 @@
-import struct, datetime, six, calendar, datetime
+import struct, datetime, six, calendar, datetime, Encoding
 try:
 	from cStringIO import StringIO as BytesIO
 except:
@@ -37,49 +37,17 @@ def TestDecodeNumber():
 	assert (DecodeNumber(BytesIO(b'\x05'), True) == -3)
 	assert (DecodeNumber(BytesIO(b'\x81\x01'), True) == -65)
 
-def EncodeNumber(num, signed=False):
-	out = BytesIO()
-	num = int(num)
-
-	#Least significant byte
-	if signed:
-		if num < 0:
-			neg = True
-			num = (num*-1)-1
-		else:
-			neg = False
-		sixBits = num & 0x3f
-		num = num >> 6
-		more = num > 0
-		out.write(struct.pack("B", (more << 7) + (sixBits << 1) + neg))
-	else:
-		if num < 0:
-			raise ValueError("Value cannot be negative")
-		sevenBits = num & 0x7f
-		num = num >> 7
-		more = num > 0
-		out.write(struct.pack("B", (more << 7) + sevenBits))
-	
-	#Later bytes
-	while more:
-		sevenBits = num & 0x7f
-		num = num >> 7
-		more = num > 0
-		out.write(struct.pack("B", (more << 7) + sevenBits))
-		
-	#print map(hex, map(ord, out.getvalue()))
-	return out.getvalue()
 
 def TestEncodeNumber():
-	assert (EncodeNumber(5) == b'\x05')
-	assert (EncodeNumber(127) == b'\x7f')
-	assert (EncodeNumber(323) == b'\xc3\x02')
-	assert (EncodeNumber(16384) == b'\x80\x80\x01')
-	assert (EncodeNumber(4, True) == b'\x08')
-	assert (EncodeNumber(64, True) == b'\x80\x01')
-	assert (EncodeNumber(-2, True) == b'\x03')
-	assert (EncodeNumber(-3, True) == b'\x05')
-	assert (EncodeNumber(-65, True) == b'\x81\x01')
+	assert (Encoding.EncodeVarint(5) == b'\x05')
+	assert (Encoding.EncodeVarint(127) == b'\x7f')
+	assert (Encoding.EncodeVarint(323) == b'\xc3\x02')
+	assert (Encoding.EncodeVarint(16384) == b'\x80\x80\x01')
+	assert (Encoding.EncodeZigzag(4) == b'\x08')
+	assert (Encoding.EncodeZigzag(64) == b'\x80\x01')
+	assert (Encoding.EncodeZigzag(-2) == b'\x03')
+	assert (Encoding.EncodeZigzag(-3) == b'\x05')
+	assert (Encoding.EncodeZigzag(-65) == b'\x81\x01')
 
 # ****** o5m decoder ******
 
@@ -384,51 +352,51 @@ class O5mEncode(object):
 			headerData = "o5c2".encode("utf-8")
 		else:
 			headerData = "o5m2".encode("utf-8")
-		self.handle.write(EncodeNumber(len(headerData)))
+		self.handle.write(Encoding.EncodeVarint(len(headerData)))
 		self.handle.write(headerData)
 
 	def StoreBounds(self, bbox):
 
 		#south-western corner 
 		bboxData = []
-		bboxData.append(EncodeNumber(round(bbox[0] * 1e7), True)) #lon
-		bboxData.append(EncodeNumber(round(bbox[1] * 1e7), True)) #lat
+		bboxData.append(Encoding.EncodeZigzag(round(bbox[0] * 1e7))) #lon
+		bboxData.append(Encoding.EncodeZigzag(round(bbox[1] * 1e7))) #lat
 
 		#north-eastern corner
-		bboxData.append(EncodeNumber(round(bbox[2] * 1e7), True)) #lon
-		bboxData.append(EncodeNumber(round(bbox[3] * 1e7), True)) #lat
+		bboxData.append(Encoding.EncodeZigzag(round(bbox[2] * 1e7))) #lon
+		bboxData.append(Encoding.EncodeZigzag(round(bbox[3] * 1e7))) #lat
 		
 		combinedData = b''.join(bboxData)
 		self.handle.write(b'\xdb')
-		self.handle.write(EncodeNumber(len(combinedData)))
+		self.handle.write(Encoding.EncodeVarint(len(combinedData)))
 		self.handle.write(combinedData)
 
 	def EncodeMetaData(self, version, timestamp, changeset, uid, username, outStream):
 		#Decode author and time stamp
 		if version != 0 and version != None:
-			outStream.write(EncodeNumber(version))
+			outStream.write(Encoding.EncodeVarint(version))
 			if timestamp != None:
 				timestamp = calendar.timegm(timestamp.utctimetuple())
 			else:
 				timestamp = 0
 			deltaTime = timestamp - self.lastTimeStamp
-			outStream.write(EncodeNumber(deltaTime, True))
+			outStream.write(Encoding.EncodeZigzag(deltaTime))
 			self.lastTimeStamp = timestamp
 			#print "timestamp", self.lastTimeStamp, deltaTime
 			if timestamp != 0:
 				#print changeset
 				deltaChangeSet = changeset - self.lastChangeSet
-				outStream.write(EncodeNumber(deltaChangeSet, True))
+				outStream.write(Encoding.EncodeZigzag(deltaChangeSet))
 				self.lastChangeSet = changeset
 				encUid = b""
 				if uid is not None:
-					encUid = EncodeNumber(uid)
+					encUid = Encoding.EncodeVarint(uid)
 				encUsername = b""
 				if username is not None:
 					encUsername = username.encode("utf-8")
 				self.WriteStringPair(encUid, encUsername, outStream)
 		else:
-			outStream.write(EncodeNumber(0))
+			outStream.write(Encoding.EncodeVarint(0))
 
 	def EncodeSingleString(self, strIn):
 		return strIn + b'\x00'
@@ -438,7 +406,7 @@ class O5mEncode(object):
 		if len(firstString) + len(secondString) <= self.refTableLengthThreshold:
 			try:
 				existIndex = self.stringPairs.index(encodedStrings)
-				tmpStream.write(EncodeNumber(len(self.stringPairs) - existIndex))
+				tmpStream.write(Encoding.EncodeVarint(len(self.stringPairs) - existIndex))
 				return
 			except ValueError:
 				pass #Key value pair not currently in reference table
@@ -461,7 +429,7 @@ class O5mEncode(object):
 		#Object ID
 		tmpStream = BytesIO()
 		deltaId = objectId - self.lastObjId
-		tmpStream.write(EncodeNumber(deltaId, True))
+		tmpStream.write(Encoding.EncodeZigzag(deltaId))
 		self.lastObjId = objectId
 
 		version, timestamp, changeset, uid, username = metaData
@@ -470,11 +438,11 @@ class O5mEncode(object):
 		#Position
 		lon = round(pos[1] * 1e7)
 		deltaLon = lon - self.lastLon
-		tmpStream.write(EncodeNumber(deltaLon, True))
+		tmpStream.write(Encoding.EncodeZigzag(deltaLon))
 		self.lastLon = lon
 		lat = round(pos[0] * 1e7)
 		deltaLat = lat - self.lastLat
-		tmpStream.write(EncodeNumber(deltaLat, True))
+		tmpStream.write(Encoding.EncodeZigzag(deltaLat))
 		self.lastLat = lat
 
 		for key in tags:
@@ -482,7 +450,7 @@ class O5mEncode(object):
 			self.WriteStringPair(key.encode("utf-8"), val.encode("utf-8"), tmpStream)
 
 		binData = tmpStream.getvalue()
-		self.handle.write(EncodeNumber(len(binData)))
+		self.handle.write(Encoding.EncodeVarint(len(binData)))
 		self.handle.write(binData)
 
 	def StoreWay(self, objectId, metaData, tags, refs):
@@ -491,7 +459,7 @@ class O5mEncode(object):
 		#Object ID
 		tmpStream = BytesIO()
 		deltaId = objectId - self.lastObjId
-		tmpStream.write(EncodeNumber(deltaId, True))
+		tmpStream.write(Encoding.EncodeZigzag(deltaId))
 		self.lastObjId = objectId
 
 		#Store meta data
@@ -502,11 +470,11 @@ class O5mEncode(object):
 		refStream = BytesIO()
 		for ref in refs:
 			deltaRef = ref - self.lastRefNode
-			refStream.write(EncodeNumber(deltaRef, True))
+			refStream.write(Encoding.EncodeZigzag(deltaRef))
 			self.lastRefNode = ref
 
 		encRefs = refStream.getvalue()
-		tmpStream.write(EncodeNumber(len(encRefs)))
+		tmpStream.write(Encoding.EncodeVarint(len(encRefs)))
 		tmpStream.write(encRefs)
 
 		#Write tags
@@ -515,7 +483,7 @@ class O5mEncode(object):
 			self.WriteStringPair(key.encode("utf-8"), val.encode("utf-8"), tmpStream)
 
 		binData = tmpStream.getvalue()
-		self.handle.write(EncodeNumber(len(binData)))
+		self.handle.write(Encoding.EncodeVarint(len(binData)))
 		self.handle.write(binData)
 		
 	def StoreRelation(self, objectId, metaData, tags, refs):
@@ -524,7 +492,7 @@ class O5mEncode(object):
 		#Object ID
 		tmpStream = BytesIO()
 		deltaId = objectId - self.lastObjId
-		tmpStream.write(EncodeNumber(deltaId, True))
+		tmpStream.write(Encoding.EncodeZigzag(deltaId))
 		self.lastObjId = objectId
 
 		#Store meta data
@@ -549,12 +517,12 @@ class O5mEncode(object):
 				deltaRef = refId - self.lastRefRelation
 				self.lastRefRelation = refId
 
-			refStream.write(EncodeNumber(deltaRef, True))
+			refStream.write(Encoding.EncodeZigzag(deltaRef))
 
 			typeCodeAndRole = (str(typeCode) + role).encode("utf-8")
 			try:
 				refIndex = self.stringPairs.index(typeCodeAndRole)
-				refStream.write(EncodeNumber(len(self.stringPairs) - refIndex))
+				refStream.write(Encoding.EncodeVarint(len(self.stringPairs) - refIndex))
 			except ValueError:
 				refStream.write(b'\x00') #String start byte
 				refStream.write(self.EncodeSingleString(typeCodeAndRole))
@@ -562,7 +530,7 @@ class O5mEncode(object):
 					self.AddToRefTable(typeCodeAndRole)
 
 		encRefs = refStream.getvalue()
-		tmpStream.write(EncodeNumber(len(encRefs)))
+		tmpStream.write(Encoding.EncodeVarint(len(encRefs)))
 		tmpStream.write(encRefs)
 
 		#Write tags
@@ -571,7 +539,7 @@ class O5mEncode(object):
 			self.WriteStringPair(key.encode("utf-8"), val.encode("utf-8"), tmpStream)
 
 		binData = tmpStream.getvalue()
-		self.handle.write(EncodeNumber(len(binData)))
+		self.handle.write(Encoding.EncodeVarint(len(binData)))
 		self.handle.write(binData)
 
 	def Sync(self):
