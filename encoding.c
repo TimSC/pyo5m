@@ -95,6 +95,25 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 	unsigned PY_LONG_LONG total = 0;
 	while (contin) {
 		PyObject *readResponse = PyObject_Call(readMethod, readLenArgListObj, NULL);
+
+#if PY_MAJOR_VERSION >= 3
+		if(!PyBytes_Check(readResponse)) {
+			Py_DECREF(outObj);
+			Py_DECREF(readResponse);
+			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
+			return NULL;
+		}
+
+		Py_ssize_t rawBuffSize = PyBytes_GET_SIZE(readResponse);
+		const char* rawBuff = PyBytes_AS_STRING(readResponse);
+
+		if(rawBuff == NULL || rawBuffSize < 1) {
+			Py_DECREF(outObj);
+			Py_DECREF(readResponse);
+			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
+			return NULL;
+		}
+#else
 		if(!PyString_Check(readResponse)) {
 			Py_DECREF(outObj);
 			Py_DECREF(readResponse);
@@ -111,6 +130,7 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
+#endif
 
 		unsigned PY_LONG_LONG val = *(unsigned char *)(rawBuff);
 		contin = (val & 0x80) != 0;
@@ -154,6 +174,25 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 	unsigned PY_LONG_LONG total = 0;
 	while (contin) {
 		PyObject *readResponse = PyObject_Call(readMethod, readLenArgListObj, NULL);
+
+#if PY_MAJOR_VERSION >= 3
+		if(!PyBytes_Check(readResponse)) {
+			Py_DECREF(outObj);
+			Py_DECREF(readResponse);
+			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
+			return NULL;
+		}
+
+		Py_ssize_t rawBuffSize = PyBytes_GET_SIZE(readResponse);
+		const char* rawBuff = PyBytes_AS_STRING(readResponse);
+
+		if(rawBuff == NULL || rawBuffSize < 1) {
+			Py_DECREF(outObj);
+			Py_DECREF(readResponse);
+			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
+			return NULL;
+		}
+#else
 		if(!PyString_Check(readResponse)) {
 			Py_DECREF(outObj);
 			Py_DECREF(readResponse);
@@ -170,6 +209,7 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
+#endif
 
 		unsigned PY_LONG_LONG val = *(unsigned char *)(rawBuff);
 		contin = (val & 0x80) != 0;
@@ -199,11 +239,9 @@ static PyMethodDef moduleFunctions[] = {
 	{NULL, NULL, 0, NULL}
 };
 
-PyMODINIT_FUNC
-initEncoding(void)
-{
-
 #if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_Encoding(void)
+{
 	static struct PyModuleDef moduledef = {
 		PyModuleDef_HEAD_INIT,
 		"Encoding",	 /* m_name */
@@ -216,8 +254,11 @@ initEncoding(void)
 		NULL,				/* m_free */
 	};
 	return PyModule_Create(&moduledef);
-#else
-	(void) Py_InitModule("Encoding", moduleFunctions);
-#endif
 }
+#else
+PyMODINIT_FUNC initEncoding(void)
+{
+	(void) Py_InitModule("Encoding", moduleFunctions);
+}
+#endif
 
