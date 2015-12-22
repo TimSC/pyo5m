@@ -27,7 +27,11 @@ EncodeVarint(PyObject *self, PyObject *args)
 		}
 	}
 
+#if PY_MAJOR_VERSION >= 3
+	return PyBytes_FromStringAndSize(buff, cursor);
+#else
     return PyString_FromStringAndSize(buff, cursor);
+#endif
 }
 
 static PyObject *
@@ -57,11 +61,14 @@ EncodeZigzag(PyObject *self, PyObject *args)
 			return NULL;
 		}
 	}
-
+#if PY_MAJOR_VERSION >= 3
+	return PyBytes_FromStringAndSize(buff, cursor);
+#else
     return PyString_FromStringAndSize(buff, cursor);
+#endif
 }
 
-static PyMethodDef SpamMethods[] = {
+static PyMethodDef moduleFunctions[] = {
     {"EncodeVarint",  EncodeVarint, METH_VARARGS, "Varint encode an unsigned number."},
 	{"EncodeZigzag",  EncodeZigzag, METH_VARARGS, "Zigzag encode a signed number."},
     {NULL, NULL, 0, NULL}
@@ -70,6 +77,22 @@ static PyMethodDef SpamMethods[] = {
 PyMODINIT_FUNC
 initEncoding(void)
 {
-    (void) Py_InitModule("Encoding", SpamMethods);
+
+#if PY_MAJOR_VERSION >= 3
+    static struct PyModuleDef moduledef = {
+        PyModuleDef_HEAD_INIT,
+        "Encoding",     /* m_name */
+        "Encoding o5m data types",  /* m_doc */
+        -1,                  /* m_size */
+        moduleFunctions,    /* m_methods */
+        NULL,                /* m_reload */
+        NULL,                /* m_traverse */
+        NULL,                /* m_clear */
+        NULL,                /* m_free */
+    };
+	return PyModule_Create(&moduledef);
+#else
+    (void) Py_InitModule("Encoding", moduleFunctions);
+#endif
 }
 
