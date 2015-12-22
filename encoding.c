@@ -1,20 +1,38 @@
 #include <Python.h>
 
-static PyObject *
-spam_system(PyObject *self, PyObject *args)
-{
-    const char *command;
-    int sts;
+#define INTERNAL_BUFF_SIZE 128
 
-    if (!PyArg_ParseTuple(args, "s", &command))
+static PyObject *
+EncodeVarint(PyObject *self, PyObject *args)
+{
+    unsigned PY_LONG_LONG val = 0;
+	char buff[INTERNAL_BUFF_SIZE] = "";
+
+    if (!PyArg_ParseTuple(args, "K", &val))
         return NULL;
-    sts = system(command);
-    return Py_BuildValue("i", sts);
+	
+	unsigned char more = 1;
+	unsigned int cursor = 0;
+	while (more) {
+		unsigned char sevenBits = val & 0x7f;
+		val = val >> 7;
+		more = val > 0;
+		if(cursor < INTERNAL_BUFF_SIZE) {
+			buff[cursor] = (more << 7) + sevenBits;
+			cursor ++;	
+		}
+		else {
+			PyErr_SetString(PyExc_TypeError, "Internal buffer overflow while encoding varint");
+			return NULL;
+		}
+	}
+
+    return PyString_FromStringAndSize(buff, cursor);
 }
 
 static PyMethodDef SpamMethods[] = {
-    {"system",  spam_system, METH_VARARGS,
-     "Execute a shell command."},
+    {"EncodeVarint",  EncodeVarint, METH_VARARGS,
+     "Encode a varint."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
