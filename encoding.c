@@ -97,6 +97,7 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 #if PY_MAJOR_VERSION >= 3
 		if(!PyBytes_Check(readResponse)) {
 			Py_DECREF(readResponse);
+			Py_DECREF(readLenArgListObj);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
 			return NULL;
 		}
@@ -106,12 +107,14 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 
 		if(rawBuff == NULL || rawBuffSize < 1) {
 			Py_DECREF(readResponse);
+			Py_DECREF(readLenArgListObj);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
 #else
 		if(!PyString_Check(readResponse)) {
 			Py_DECREF(readResponse);
+			Py_DECREF(readLenArgListObj);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
 			return NULL;
 		}
@@ -121,6 +124,7 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 
 		if(rawBuff == NULL || rawBuffSize < 1) {
 			Py_DECREF(readResponse);
+			Py_DECREF(readLenArgListObj);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
@@ -169,6 +173,7 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 #if PY_MAJOR_VERSION >= 3
 		if(!PyBytes_Check(readResponse)) {
 			Py_DECREF(readResponse);
+			Py_DECREF(readLenArgListObj);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
 			return NULL;
 		}
@@ -178,12 +183,14 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 
 		if(rawBuff == NULL || rawBuffSize < 1) {
 			Py_DECREF(readResponse);
+			Py_DECREF(readLenArgListObj);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
 #else
 		if(!PyString_Check(readResponse)) {
 			Py_DECREF(readResponse);
+			Py_DECREF(readLenArgListObj);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
 			return NULL;
 		}
@@ -193,6 +200,7 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 
 		if(rawBuff == NULL || rawBuffSize < 1) {
 			Py_DECREF(readResponse);
+			Py_DECREF(readLenArgListObj);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
