@@ -1,4 +1,5 @@
-import struct, datetime, six, calendar, datetime, Encoding
+import struct, datetime, six, calendar, datetime
+import Encoding
 try:
 	from cStringIO import StringIO as BytesIO
 except:
