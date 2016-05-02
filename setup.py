@@ -6,6 +6,7 @@ module1 = Extension('Encoding',
 
 setup (name = 'pyo5m',
        version = '1.0',
-       description = 'This is a demo package',
+       description = 'o5m encoding and decoding',
+	   py_modules=['osmxml', 'o5m', 'OsmData'],
        ext_modules = [module1])
 

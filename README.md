@@ -1,6 +1,18 @@
 # pyo5m
 o5m openstreetmap format encoder/decoder in python v2 and v3. Includes both stream decoding and static interpretations of data. It also includes a standard osm xml encoder/decoder.
 
+To install in the python distribution:
+
+ python setup.py build
+
+ python setup.py install
+
+To install locally:
+
+ python setup.py build_ext --inplace
+
+Example usage:
+
 ```python
 from pyo5m import OsmData
 

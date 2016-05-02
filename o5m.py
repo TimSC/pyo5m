@@ -1,4 +1,5 @@
-import struct, datetime, six, calendar, datetime, Encoding
+import struct, datetime, six, calendar, datetime
+import Encoding
 try:
 	from cStringIO import StringIO as BytesIO
 except:
@@ -6,37 +7,16 @@ except:
 
 # ****** o5m utilities ******
 
-def DecodeNumber(stream, signed=False):
-	contin = True
-	offset = 0
-	total = 0
-	neg = False
-	while contin:
-		val = struct.unpack("B", stream.read(1))[0]
-		contin = val & 0x80 != 0
-		if signed and offset == 0:
-			neg = val & 0x1
-			val = val >> 1
-			total += (val & 0x3f) << offset
-			offset += 6
-		else:
-			total += (val & 0x7f) << offset
-			offset += 7
-	if neg:
-		total = (total * -1) -1
-	return total
-
 def TestDecodeNumber():
-	assert (DecodeNumber(BytesIO(b'\x05')) == 5)
-	assert (DecodeNumber(BytesIO(b'\x7f')) == 127)
-	assert (DecodeNumber(BytesIO(b'\xc3\x02')) == 323)
-	assert (DecodeNumber(BytesIO(b'\x80\x80\x01')) == 16384)
-	assert (DecodeNumber(BytesIO(b'\x08'), True) == 4)
-	assert (DecodeNumber(BytesIO(b'\x80\x01'), True) == 64)
-	assert (DecodeNumber(BytesIO(b'\x03'), True) == -2)
-	assert (DecodeNumber(BytesIO(b'\x05'), True) == -3)
-	assert (DecodeNumber(BytesIO(b'\x81\x01'), True) == -65)
-
+	assert (Encoding.DecodeVarint(BytesIO(b'\x05')) == 5)
+	assert (Encoding.DecodeVarint(BytesIO(b'\x7f')) == 127)
+	assert (Encoding.DecodeVarint(BytesIO(b'\xc3\x02')) == 323)
+	assert (Encoding.DecodeVarint(BytesIO(b'\x80\x80\x01')) == 16384)
+	assert (Encoding.DecodeZigzag(BytesIO(b'\x08')) == 4)
+	assert (Encoding.DecodeZigzag(BytesIO(b'\x80\x01')) == 64)
+	assert (Encoding.DecodeZigzag(BytesIO(b'\x03')) == -2)
+	assert (Encoding.DecodeZigzag(BytesIO(b'\x05')) == -3)
+	assert (Encoding.DecodeZigzag(BytesIO(b'\x81\x01')) == -65)
 
 def TestEncodeNumber():
 	assert (Encoding.EncodeVarint(5) == b'\x05')
@@ -108,27 +88,27 @@ class O5mDecode(object):
 			return False
 	
 		#Default behavior to skip unknown data
-		length = DecodeNumber(self.handle)
+		length = Encoding.DecodeVarint(self.handle)
 		unknownDataSet = self.handle.read(length)
 		return False
 
 	def DecodeHeader(self):
-		length = DecodeNumber(self.handle)
+		length = Encoding.DecodeVarint(self.handle)
 		fileType = self.handle.read(length)
 		if self.funcStoreIsDiff != None:
 			self.funcStoreIsDiff("o5c2"==fileType)
 		self.headerDecoded = True
 	
 	def DecodeBoundingBox(self):
-		length = DecodeNumber(self.handle)
+		length = Encoding.DecodeVarint(self.handle)
 		
 		#south-western corner 
-		x1 = DecodeNumber(self.handle, True) / 1e7 #lon
-		y1 = DecodeNumber(self.handle, True) / 1e7 #lat
+		x1 = Encoding.DecodeZigzag(self.handle) / 1e7 #lon
+		y1 = Encoding.DecodeZigzag(self.handle) / 1e7 #lat
 
 		#north-eastern corner
-		x2 = DecodeNumber(self.handle, True) / 1e7 #lon
-		y2 = DecodeNumber(self.handle, True) / 1e7 #lat
+		x2 = Encoding.DecodeZigzag(self.handle) / 1e7 #lon
+		y2 = Encoding.DecodeZigzag(self.handle) / 1e7 #lat
 
 		if self.funcStoreBounds != None:
 			self.funcStoreBounds([x1, y1, x2, y2])
@@ -157,7 +137,7 @@ class O5mDecode(object):
 			self.stringPairs = self.stringPairs[-self.refTableMaxSize:]
 
 	def ReadStringPair(self, stream):
-		ref = DecodeNumber(stream)
+		ref = Encoding.DecodeVarint(stream)
 		if ref == 0x00:
 			#print "new pair"
 			firstStr = self.DecodeSingleString(stream)
@@ -172,25 +152,25 @@ class O5mDecode(object):
 
 	def DecodeMetaData(self, nodeDataStream):
 		#Decode author and time stamp
-		version = DecodeNumber(nodeDataStream)
+		version = Encoding.DecodeVarint(nodeDataStream)
 		timestamp = None
 		changeset = None
 		uid = None
 		username = None
 		if version != 0:
-			deltaTime = DecodeNumber(nodeDataStream, True)
+			deltaTime = Encoding.DecodeZigzag(nodeDataStream)
 			self.lastTimeStamp += deltaTime
 			timestamp = datetime.datetime.utcfromtimestamp(self.lastTimeStamp)
 			#print "timestamp", self.lastTimeStamp, deltaTime
 			if self.lastTimeStamp != 0:
-				deltaChangeSet = DecodeNumber(nodeDataStream, True)
+				deltaChangeSet = Encoding.DecodeZigzag(nodeDataStream)
 				self.lastChangeSet += deltaChangeSet
 				changeset = self.lastChangeSet
 				#print "changeset", self.lastChangeSet, deltaChangeSet
 				firstString, secondString = self.ReadStringPair(nodeDataStream)
 
 				if len(firstString) > 0:
-					uid = DecodeNumber(BytesIO(firstString))
+					uid = Encoding.DecodeVarint(BytesIO(firstString))
 					#print "uid", uid
 				if len(secondString) > 0:
 					username = secondString.decode("utf-8")
@@ -198,20 +178,20 @@ class O5mDecode(object):
 		return version, timestamp, changeset, uid, username
 
 	def DecodeNode(self):
-		length = DecodeNumber(self.handle)
+		length = Encoding.DecodeVarint(self.handle)
 		nodeData = self.handle.read(length)
 
 		#Decode object ID
 		nodeDataStream = BytesIO(nodeData)
-		deltaId = DecodeNumber(nodeDataStream, True)
+		deltaId = Encoding.DecodeZigzag(nodeDataStream)
 		self.lastObjId += deltaId
 		objectId = self.lastObjId 
 		#print "objectId", objectId
 
 		metaData = self.DecodeMetaData(nodeDataStream)
 
-		self.lastLon += DecodeNumber(nodeDataStream, True)
-		self.lastLat += DecodeNumber(nodeDataStream, True)
+		self.lastLon += Encoding.DecodeZigzag(nodeDataStream)
+		self.lastLat += Encoding.DecodeZigzag(nodeDataStream)
 		lon = self.lastLon / 1e7
 		lat = self.lastLat / 1e7
 		#print lat, lon
@@ -228,25 +208,25 @@ class O5mDecode(object):
 			self.funcStoreNode(objectId, metaData, tags, (lat, lon))
 
 	def DecodeWay(self):
-		length = DecodeNumber(self.handle)
+		length = Encoding.DecodeVarint(self.handle)
 		objData = self.handle.read(length)
 
 		#Decode object ID
 		objDataStream = BytesIO(objData)
-		deltaId = DecodeNumber(objDataStream, True)
+		deltaId = Encoding.DecodeZigzag(objDataStream)
 		self.lastObjId += deltaId
 		objectId = self.lastObjId 
 		#print "objectId", objectId
 
 		metaData = self.DecodeMetaData(objDataStream)
 
-		refLen = DecodeNumber(objDataStream)
+		refLen = Encoding.DecodeVarint(objDataStream)
 		#print "len ref", refLen
 
 		refStart = objDataStream.tell()
 		refs = []
 		while objDataStream.tell() < refStart + refLen:
-			self.lastRefNode += DecodeNumber(objDataStream, True)
+			self.lastRefNode += Encoding.DecodeZigzag(objDataStream)
 			refs.append(self.lastRefNode)
 			#print "ref", self.lastRefNode
 
@@ -262,27 +242,27 @@ class O5mDecode(object):
 			self.funcStoreWay(objectId, metaData, tags, refs)
 
 	def DecodeRelation(self):
-		length = DecodeNumber(self.handle)
+		length = Encoding.DecodeVarint(self.handle)
 		objData = self.handle.read(length)
 
 		#Decode object ID
 		objDataStream = BytesIO(objData)
-		deltaId = DecodeNumber(objDataStream, True)
+		deltaId = Encoding.DecodeZigzag(objDataStream)
 		self.lastObjId += deltaId
 		objectId = self.lastObjId 
 		#print "objectId", objectId
 
 		metaData = self.DecodeMetaData(objDataStream)
 
-		refLen = DecodeNumber(objDataStream)
+		refLen = Encoding.DecodeVarint(objDataStream)
 		#print "len ref", refLen
 
 		refStart = objDataStream.tell()
 		refs = []
 
 		while objDataStream.tell() < refStart + refLen:
-			deltaRef = DecodeNumber(objDataStream, True)
-			refIndex = DecodeNumber(objDataStream) #Index into reference table
+			deltaRef = Encoding.DecodeZigzag(objDataStream)
+			refIndex = Encoding.DecodeVarint(objDataStream) #Index into reference table
 			if refIndex == 0:
 				typeAndRoleRaw = self.DecodeSingleString(objDataStream)
 				typeAndRole = typeAndRoleRaw.decode("utf-8")
