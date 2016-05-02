@@ -6,7 +6,7 @@ except:
 
 if __name__=="__main__":
 
-	if 0:
+	if 1:
 		fi = gzip.open("../coastout.o5m.gz", "rb")
 
 		dec = o5m.O5mDecode(fi)

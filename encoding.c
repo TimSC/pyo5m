@@ -80,7 +80,6 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 		PyErr_SetString(PyExc_TypeError, "Input object does not have read method");
 		return NULL;
 	}
-	Py_DECREF(outObj);
 
 	if(!PyCallable_Check(readMethod)) {
 		Py_DECREF(readMethod);
@@ -163,7 +162,6 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 		PyErr_SetString(PyExc_TypeError, "Input object does not have read method");
 		return NULL;
 	}
-	Py_DECREF(outObj);
 
 	if(!PyCallable_Check(readMethod)) {
 		Py_DECREF(readMethod);
