@@ -80,8 +80,10 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 		PyErr_SetString(PyExc_TypeError, "Input object does not have read method");
 		return NULL;
 	}
+	Py_DECREF(outObj);
 
 	if(!PyCallable_Check(readMethod)) {
+		Py_DECREF(readMethod);
 		PyErr_SetString(PyExc_TypeError, "Input object read method not callable");
 		return NULL;
 	}
@@ -98,6 +100,7 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 		if(!PyBytes_Check(readResponse)) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
+			Py_DECREF(readMethod);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
 			return NULL;
 		}
@@ -108,6 +111,7 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 		if(rawBuff == NULL || rawBuffSize < 1) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
+			Py_DECREF(readMethod);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
@@ -115,6 +119,7 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 		if(!PyString_Check(readResponse)) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
+			Py_DECREF(readMethod);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
 			return NULL;
 		}
@@ -125,6 +130,7 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 		if(rawBuff == NULL || rawBuffSize < 1) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
+			Py_DECREF(readMethod);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
@@ -140,6 +146,7 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 
 	PyObject *ret = PyLong_FromUnsignedLongLong(total);
 	Py_DECREF(readLenArgListObj);
+	Py_DECREF(readMethod);
 
 	return ret;
 }
@@ -156,8 +163,10 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 		PyErr_SetString(PyExc_TypeError, "Input object does not have read method");
 		return NULL;
 	}
+	Py_DECREF(outObj);
 
 	if(!PyCallable_Check(readMethod)) {
+		Py_DECREF(readMethod);
 		PyErr_SetString(PyExc_TypeError, "Input object read method not callable");
 		return NULL;
 	}
@@ -174,6 +183,7 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 		if(!PyBytes_Check(readResponse)) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
+			Py_DECREF(readMethod);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
 			return NULL;
 		}
@@ -184,6 +194,7 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 		if(rawBuff == NULL || rawBuffSize < 1) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
+			Py_DECREF(readMethod);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
@@ -191,6 +202,7 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 		if(!PyString_Check(readResponse)) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
+			Py_DECREF(readMethod);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
 			return NULL;
 		}
@@ -201,6 +213,7 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 		if(rawBuff == NULL || rawBuffSize < 1) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
+			Py_DECREF(readMethod);
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
@@ -218,6 +231,7 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 
 	PyObject *ret = PyLong_FromLongLong(zz);
 	Py_DECREF(readLenArgListObj);
+	Py_DECREF(readMethod);
 
 	return ret;
 
