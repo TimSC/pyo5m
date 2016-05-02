@@ -67,6 +67,7 @@ class O5mDecode(object):
 		self.funcStoreIsDiff = None
 		self.refTableLengthThreshold = 250
 		self.refTableMaxSize = 15000
+		self.headerDecoded = False
 
 	def ResetDeltaCoding(self):
 		self.lastObjId = 0 #Used in delta encoding
@@ -80,6 +81,9 @@ class O5mDecode(object):
 		self.lastRefRelation = 0
 	
 	def DecodeNext(self):
+		if not self.headerDecoded:
+			raise RuntimeError("Header decode needs to be done first")
+
 		code = struct.unpack("B", self.handle.read(1))[0]
 		#print "found", hex(code)
 		if code == 0x10:
@@ -113,6 +117,7 @@ class O5mDecode(object):
 		fileType = self.handle.read(length)
 		if self.funcStoreIsDiff != None:
 			self.funcStoreIsDiff("o5c2"==fileType)
+		self.headerDecoded = True
 	
 	def DecodeBoundingBox(self):
 		length = DecodeNumber(self.handle)
