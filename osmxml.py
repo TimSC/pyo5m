@@ -58,7 +58,7 @@ class DecodeHandler(object):
 			if self.parent.funcStoreNode is not None:
 				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
 					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
-					ValOrNone(self.attrs,"username"))
+					ValOrNone(self.attrs,"user"))
 				self.parent.funcStoreNode(self.attrs["id"], metaData, 
 					self.tags, [self.attrs["lat"],self.attrs["lon"]])
 			self.attrs = {}
@@ -69,7 +69,7 @@ class DecodeHandler(object):
 			if self.parent.funcStoreWay is not None:
 				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
 					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
-					ValOrNone(self.attrs,"username"))
+					ValOrNone(self.attrs,"user"))
 				self.parent.funcStoreWay(self.attrs["id"], metaData, self.tags, self.members)
 			self.attrs = {}
 			self.tags = {}
@@ -79,7 +79,7 @@ class DecodeHandler(object):
 			if self.parent.funcStoreRelation is not None:
 				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
 					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
-					ValOrNone(self.attrs,"username"))
+					ValOrNone(self.attrs,"user"))
 				self.parent.funcStoreRelation(self.attrs["id"], metaData, self.tags, self.members)
 			self.attrs = {}
 			self.tags = {}
