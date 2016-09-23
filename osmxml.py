@@ -42,16 +42,19 @@ class DecodeHandler(object):
 		self.depth += 1
 		if name in ["node", "way", "relation"]:
 			self.attrs = self.AttrTypes(attrs)
-		if name == "tag":
+		elif name == "tag":
 			self.tags[attrs['k']] = attrs['v']
-		if name == "nd":
+		elif name == "nd":
 			self.members.append(int(attrs['ref']))
-		if name == "member":
+		elif name == "member":
 			self.members.append((attrs['type'], int(attrs['ref']), attrs['role']))
-		if name == "bounds" and self.parent.funcStoreBounds is not None:
+		elif name == "bounds" and self.parent.funcStoreBounds is not None:
 				bbox = (float(attrs['minlon']), float(attrs['minlat']), 
 					float(attrs['maxlon']), float(attrs['maxlat']))
 				self.parent.funcStoreBounds(bbox)
+		elif name in ["create", "modify", "delete"]:
+			if self.parent.funcChangeStart is not None:
+				self.parent.funcChangeStart(name)
 
 	def end_element(self, name):
 		if name == "node":
@@ -65,7 +68,7 @@ class DecodeHandler(object):
 			self.tags = {}
 			self.members = []
 
-		if name == "way":
+		elif name == "way":
 			if self.parent.funcStoreWay is not None:
 				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
 					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
@@ -75,7 +78,7 @@ class DecodeHandler(object):
 			self.tags = {}
 			self.members = []
 
-		if name == "relation":
+		elif name == "relation":
 			if self.parent.funcStoreRelation is not None:
 				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
 					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
@@ -84,6 +87,10 @@ class DecodeHandler(object):
 			self.attrs = {}
 			self.tags = {}
 			self.members = []
+
+		elif name in ["create", "modify", "delete"]:
+			if self.parent.funcChangeEnd is not None:
+				self.parent.funcChangeEnd(name)
 
 		self.depth -= 1
 
@@ -102,7 +109,9 @@ class OsmXmlDecode(object):
 		self.funcStoreWay = None
 		self.funcStoreRelation = None
 		self.funcStoreBounds = None
-		self.funcStoreIsDiff = None		
+		self.funcStoreIsDiff = None
+		self.funcChangeStart = None
+		self.funcChangeEnd = None
 
 	def DecodeNext(self):
 		xmlData = self.fi.read(self.readBlockSize)

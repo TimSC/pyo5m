@@ -78,4 +78,42 @@ class OsmData(object):
 	def StoreIsDiff(self, isDiff):
 		self.isDiff = isDiff
 
-	
+class OsmChange(object):
+	def __init__(self):
+		self.create = OsmData()
+		self.modify = OsmData()
+		self.delete = OsmData()
+		self.dec = None
+
+	def ChangeStart(self, changeType):
+		#print "start", changeType
+		if changeType == "create":
+			self.dec.funcStoreNode = self.create.StoreNode
+			self.dec.funcStoreWay = self.create.StoreWay
+			self.dec.funcStoreRelation = self.create.StoreRelation
+		if changeType == "modify":
+			self.dec.funcStoreNode = self.modify.StoreNode
+			self.dec.funcStoreWay = self.modify.StoreWay
+			self.dec.funcStoreRelation = self.modify.StoreRelation
+		if changeType == "delete":
+			self.dec.funcStoreNode = self.delete.StoreNode
+			self.dec.funcStoreWay = self.delete.StoreWay
+			self.dec.funcStoreRelation = self.delete.StoreRelation
+
+	def ChangeEnd(self, changeType):
+		#print "end", changeType
+		self.dec.funcStoreNode = None
+		self.dec.funcStoreWay = None
+		self.dec.funcStoreRelation = None
+
+	def LoadFromOscXml(self, fi):
+		self.dec = osmxml.OsmXmlDecode(fi)
+		self.dec.funcChangeStart = self.ChangeStart
+		self.dec.funcChangeEnd = self.ChangeEnd
+
+		eof = False
+		while not eof:
+			eof = self.dec.DecodeNext()
+
+		self.dec = None
+
