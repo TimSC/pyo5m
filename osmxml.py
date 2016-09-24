@@ -7,6 +7,11 @@ def ValOrNone(dictIn, key):
 		return dictIn[key]
 	return None
 
+def BoolValOrNone(dictIn, key):
+	if key in dictIn:
+		return dictIn[key].lower() == "true"
+	return None
+
 # ****** decode osm xml ******
 
 class DecodeHandler(object):
@@ -61,7 +66,7 @@ class DecodeHandler(object):
 			if self.parent.funcStoreNode is not None:
 				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
 					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
-					ValOrNone(self.attrs,"user"))
+					ValOrNone(self.attrs,"user"), BoolValOrNone(self.attrs,"visible"))
 				self.parent.funcStoreNode(self.attrs["id"], metaData, 
 					self.tags, [self.attrs["lat"],self.attrs["lon"]])
 			self.attrs = {}
@@ -72,7 +77,7 @@ class DecodeHandler(object):
 			if self.parent.funcStoreWay is not None:
 				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
 					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
-					ValOrNone(self.attrs,"user"))
+					ValOrNone(self.attrs,"user"), BoolValOrNone(self.attrs,"visible"))
 				self.parent.funcStoreWay(self.attrs["id"], metaData, self.tags, self.members)
 			self.attrs = {}
 			self.tags = {}
@@ -82,7 +87,7 @@ class DecodeHandler(object):
 			if self.parent.funcStoreRelation is not None:
 				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
 					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
-					ValOrNone(self.attrs,"user"))
+					ValOrNone(self.attrs,"user"), BoolValOrNone(self.attrs,"visible"))
 				self.parent.funcStoreRelation(self.attrs["id"], metaData, self.tags, self.members)
 			self.attrs = {}
 			self.tags = {}
@@ -138,7 +143,7 @@ class OsmXmlEncode(object):
 			.format(bbox[1], bbox[0], bbox[3], bbox[2]))
 
 	def EncodeMetaData(self, metaData, outStream):
-		version, timestamp, changeset, uid, username = metaData
+		version, timestamp, changeset, uid, username, visible = metaData
 		if timestamp is not None:
 			outStream.write(u" timestamp='{0}'".format(timestamp.isoformat()))
 		if version is not None:
@@ -149,6 +154,11 @@ class OsmXmlEncode(object):
 			outStream.write(u" user={0}".format(sax.quoteattr(username)))
 		if changeset is not None:
 			outStream.write(u" changeset='{0}'".format(int(changeset)))
+		if visible is not None:
+			if visible:
+				outStream.write(u" visible='true'")
+			else:
+				outStream.write(u" visible='false'")
 
 	def StoreNode(self, objectId, metaData, tags, pos):
 		self.writer.write(u"  <node id='{0}' lat='{1}' lon='{2}'"

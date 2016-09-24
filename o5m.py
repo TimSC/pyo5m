@@ -175,7 +175,8 @@ class O5mDecode(object):
 				if len(secondString) > 0:
 					username = secondString.decode("utf-8")
 
-		return version, timestamp, changeset, uid, username
+		visible = None
+		return version, timestamp, changeset, uid, username, visible
 
 	def DecodeNode(self):
 		length = Encoding.DecodeVarint(self.handle)
@@ -417,7 +418,7 @@ class O5mEncode(object):
 		tmpStream.write(Encoding.EncodeZigzag(deltaId))
 		self.lastObjId = objectId
 
-		version, timestamp, changeset, uid, username = metaData
+		version, timestamp, changeset, uid, username, visible = metaData
 		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Position
@@ -448,7 +449,7 @@ class O5mEncode(object):
 		self.lastObjId = objectId
 
 		#Store meta data
-		version, timestamp, changeset, uid, username = metaData
+		version, timestamp, changeset, uid, username, visible = metaData
 		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Store nodes
@@ -481,7 +482,7 @@ class O5mEncode(object):
 		self.lastObjId = objectId
 
 		#Store meta data
-		version, timestamp, changeset, uid, username = metaData
+		version, timestamp, changeset, uid, username, visible = metaData
 		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Store referenced children
