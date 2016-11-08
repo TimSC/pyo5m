@@ -117,3 +117,81 @@ class OsmChange(object):
 
 		self.dec = None
 
+#Utilitiy functions
+
+def Crop(osmData, bbox):
+
+	#Get nodes in bbox
+	nodesInBbox = set()
+	nodeDict = {}
+	for node in osmData.nodes:
+		objId, metaData, tags, [lat, lon] = node
+		nodeDict[objId] = (objId, metaData, tags, [lat, lon])
+		if lon < bbox[0] or lon > bbox[2] or lat < bbox[1] or lat > bbox[3]:
+			continue		
+		nodesInBbox.add(objId)
+
+	#Get ways in bbox
+	waysInQuery = set()
+	wayDict = {}
+	nodesInQuery = nodesInBbox.copy()
+	for way in osmData.ways:
+		objId, metaData, tags, members = way
+		wayDict[objId] = way
+		membersSet = set(members)
+		nodesInMembers = len(membersSet.intersection(nodesInBbox))
+		if nodesInMembers == 0:
+			continue
+		nodesInQuery.update(members)
+		waysInQuery.add(objId)
+
+	#Get relations in bbox
+	relationsInQuery = set()
+	relationDict = {}
+	for relation in osmData.relations:
+		hit = False
+		objId, metaData, tags, members = relation
+		relationDict[objId] = relation
+		
+		for memTy, memId, memRole in members:
+			hit = (memTy == "node" and memId in nodesInQuery)
+			if hit: break
+			hit = (memTy == "way" and memId in waysInQuery)
+			if hit: break
+		if not hit:
+			continue
+		relationsInQuery.add(objId)
+
+	#Get parent relations
+	relationsAndParents = relationsInQuery.copy()
+	uncheckedRelations = relationsInQuery.copy()
+	for i in range(10):
+		if len(uncheckedRelations) == 0:
+			break
+		foundRelations = set()
+
+		for objId, metaData, tags, members in osmData.relations:
+			hit = False
+			for memTy, memId, memRole in members:
+				hit = (memTy == "relation" and memId in uncheckedRelations)
+				if hit: break
+			if not hit:
+				continue
+			if objId not in relationsAndParents:
+				foundRelations.add(objId)
+
+		relationsAndParents.update(foundRelations)
+		uncheckedRelations = foundRelations
+
+	#Copy results to object
+	outOsmData = OsmData()
+	for objId in nodesInQuery:
+		outOsmData.nodes.append(nodeDict[objId])
+	for objId in waysInQuery:
+		outOsmData.ways.append(wayDict[objId])
+	for objId in relationsAndParents:
+		outOsmData.relations.append(relationDict[objId])
+	outOsmData.bounds = [bbox]
+
+	return outOsmData
+
