@@ -187,7 +187,6 @@ class O5mDecode(object):
 		deltaId = Encoding.DecodeZigzag(nodeDataStream)
 		self.lastObjId += deltaId
 		objectId = self.lastObjId 
-		#print "objectId", objectId
 
 		metaData = self.DecodeMetaData(nodeDataStream)
 

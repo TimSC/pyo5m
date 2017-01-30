@@ -200,3 +200,6 @@ class OsmXmlEncode(object):
 		self.writer.write(u"</osm>\n")
 		self.writer.flush()
 
+	def Reset(self):
+		pass  #Relevent to o5m but not xml
+
