@@ -195,3 +195,14 @@ def Crop(osmData, bbox):
 
 	return outOsmData
 
+def IndexObjectsById(osmData):
+	out = {'nodes': {}, 'ways': {}, 'relations': {}}
+
+	for objId, metaData, tags, pos in osmData.nodes:
+		out['nodes'][objId] = metaData, tags, pos
+	for objId, metaData, tags, members in osmData.ways:
+		out['ways'][objId] = metaData, tags, members
+	for objId, metaData, tags, members in osmData.ways:
+		out['relations'][objId] = metaData, tags, members
+	return out
+
