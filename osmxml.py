@@ -1,3 +1,4 @@
+from __future__ import print_function
 import xml.sax.saxutils as sax
 import xml.parsers.expat as expat
 import codecs, datetime
@@ -61,13 +62,21 @@ class DecodeHandler(object):
 			if self.parent.funcChangeStart is not None:
 				self.parent.funcChangeStart(name)
 
+	def DecodeMetaData(self):
+		extras = {}
+		for k in self.attrs:
+			if k in ["id", "version", "timestamp", "changeset", "uid", "user", "lat", "lon"]:
+				continue
+			extras[k] = self.attrs[k]
+		metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
+					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
+					ValOrNone(self.attrs,"user"), extras)
+		return metaData
+
 	def end_element(self, name):
 		if name == "node":
 			if self.parent.funcStoreNode is not None:
-				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
-					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
-					ValOrNone(self.attrs,"user"), BoolValOrNone(self.attrs,"visible"), 
-					BoolValOrNone(self.attrs,"current"))
+				metaData = self.DecodeMetaData()
 				self.parent.funcStoreNode(self.attrs["id"], metaData, 
 					self.tags, [self.attrs["lat"],self.attrs["lon"]])
 			self.attrs = {}
@@ -76,10 +85,7 @@ class DecodeHandler(object):
 
 		elif name == "way":
 			if self.parent.funcStoreWay is not None:
-				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
-					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
-					ValOrNone(self.attrs,"user"), BoolValOrNone(self.attrs,"visible"),
-					BoolValOrNone(self.attrs,"current"))
+				metaData = self.DecodeMetaData()
 				self.parent.funcStoreWay(self.attrs["id"], metaData, self.tags, self.members)
 			self.attrs = {}
 			self.tags = {}
@@ -87,10 +93,7 @@ class DecodeHandler(object):
 
 		elif name == "relation":
 			if self.parent.funcStoreRelation is not None:
-				metaData = (ValOrNone(self.attrs,"version"), ValOrNone(self.attrs,"timestamp"), 
-					ValOrNone(self.attrs,"changeset"), ValOrNone(self.attrs,"uid"), 
-					ValOrNone(self.attrs,"user"), BoolValOrNone(self.attrs,"visible"),
-					BoolValOrNone(self.attrs,"current"))
+				metaData = self.DecodeMetaData()
 				self.parent.funcStoreRelation(self.attrs["id"], metaData, self.tags, self.members)
 			self.attrs = {}
 			self.tags = {}
@@ -146,7 +149,7 @@ class OsmXmlEncode(object):
 			.format(bbox[1], bbox[0], bbox[3], bbox[2]))
 
 	def EncodeMetaData(self, metaData, outStream):
-		version, timestamp, changeset, uid, username, visible, current = metaData
+		version, timestamp, changeset, uid, username, extras = metaData
 		if timestamp is not None:
 			outStream.write(u" timestamp='{0}'".format(timestamp.isoformat()))
 		if version is not None:
@@ -157,16 +160,8 @@ class OsmXmlEncode(object):
 			outStream.write(u" user={0}".format(sax.quoteattr(username)))
 		if changeset is not None:
 			outStream.write(u" changeset='{0}'".format(int(changeset)))
-		if visible is not None:
-			if visible:
-				outStream.write(u" visible='true'")
-			else:
-				outStream.write(u" visible='false'")
-		if current is not None:
-			if current:
-				outStream.write(u" current='true'")
-			else:
-				outStream.write(u" current='false'")
+		for k in extras:
+			outStream.write(u" {}={}".format(k, sax.quoteattr(extras[k])))
 
 	def StoreNode(self, objectId, metaData, tags, pos):
 		self.writer.write(u"  <node id='{0}' lat='{1}' lon='{2}'"

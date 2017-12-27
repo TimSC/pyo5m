@@ -1,3 +1,4 @@
+from __future__ import print_function
 import struct, datetime, six, calendar, datetime
 import Encoding
 try:
@@ -177,7 +178,8 @@ class O5mDecode(object):
 
 		visible = None
 		current = None
-		return version, timestamp, changeset, uid, username, visible, current
+		extras = {}
+		return version, timestamp, changeset, uid, username, extras
 
 	def DecodeNode(self):
 		length = Encoding.DecodeVarint(self.handle)
@@ -418,7 +420,7 @@ class O5mEncode(object):
 		tmpStream.write(Encoding.EncodeZigzag(deltaId))
 		self.lastObjId = objectId
 
-		version, timestamp, changeset, uid, username, visible, current = metaData
+		version, timestamp, changeset, uid, username, extras = metaData
 		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Position
@@ -449,7 +451,7 @@ class O5mEncode(object):
 		self.lastObjId = objectId
 
 		#Store meta data
-		version, timestamp, changeset, uid, username, visible, current = metaData
+		version, timestamp, changeset, uid, username, extras = metaData
 		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Store nodes
@@ -482,7 +484,7 @@ class O5mEncode(object):
 		self.lastObjId = objectId
 
 		#Store meta data
-		version, timestamp, changeset, uid, username, visible, current = metaData
+		version, timestamp, changeset, uid, username, extras = metaData
 		self.EncodeMetaData(version, timestamp, changeset, uid, username, tmpStream)
 
 		#Store referenced children
