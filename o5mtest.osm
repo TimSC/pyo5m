@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version="0.6" generator="osmconvert 0.7T">
 	<bounds minlat="26.273714" minlon="25.4882813" maxlat="26.6670958" maxlon="25.9277344"/>
-	<node id="-191" lat="26.5681965" lon="25.76427">
+	<node id="-191" lat="1.2463e-6" lon="-1.73257e-8">
 		<tag k="foo" v="b5i7ZN5kEQOuxB8LvRL1NSQuy3AU3kaIhhft59IVbOja9Q05oRZDmGTb4ZpJ7xxzdn0GMVaH7STMPymnVE1HGmGNbDAu0RYs6uFAUFhu7kdWGjAu8ZRs4lZbKlZfR6kJvuJ8tIgJ0WC3lXv3TsgGTEdggLGhfqYhWIUleonyHSTYcgfrIpV5hK12vMBzfRYYOjAFp2oquMDlgPu6VgueCLKnUpWggZozNtbZBmUmNQhpP240"/>
 		<tag k="length" v="240"/>
 	</node>

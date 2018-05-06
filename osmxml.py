@@ -145,7 +145,7 @@ class OsmXmlEncode(object):
 		pass
 
 	def StoreBounds(self, bbox):
-		self.writer.write(u"  <bounds minlat='{0}' minlon='{1}' maxlat='{2}' maxlon='{3}' />\n"
+		self.writer.write(u"  <bounds minlat='{0:.9f}' minlon='{1:.9f}' maxlat='{2:.9f}' maxlon='{3:.9f}' />\n"
 			.format(bbox[1], bbox[0], bbox[3], bbox[2]))
 
 	def EncodeMetaData(self, metaData, outStream):
@@ -164,7 +164,7 @@ class OsmXmlEncode(object):
 			outStream.write(u" {}={}".format(k, sax.quoteattr(extras[k])))
 
 	def StoreNode(self, objectId, metaData, tags, pos):
-		self.writer.write(u"  <node id='{0}' lat='{1}' lon='{2}'"
+		self.writer.write(u"  <node id='{0}' lat='{1:.9f}' lon='{2:.9f}'"
 			.format(int(objectId), float(pos[0]), float(pos[1])))
 		self.EncodeMetaData(metaData, self.writer)
 		if len(tags) > 0:
