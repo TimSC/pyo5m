@@ -1,5 +1,5 @@
 from __future__ import print_function
-import o5m, osmxml
+from . import o5m, osmxml
 
 # ****** generic osm data store ******
 

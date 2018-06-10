@@ -1,10 +1,7 @@
 from __future__ import print_function
 import struct, datetime, six, calendar, datetime
-import Encoding
-try:
-	from cStringIO import StringIO as BytesIO
-except:
-	from io import BytesIO 
+from . import Encoding
+from io import BytesIO
 
 # ****** o5m utilities ******
 
