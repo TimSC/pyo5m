@@ -77,8 +77,11 @@ class DecodeHandler(object):
 		if name == "node":
 			if self.parent.funcStoreNode is not None:
 				metaData = self.DecodeMetaData()
+				lat, lon = 0.0, 0.0
+				if "lat" in self.attrs: lat = self.attrs["lat"]
+				if "lon" in self.attrs: lon = self.attrs["lon"]
 				self.parent.funcStoreNode(self.attrs["id"], metaData, 
-					self.tags, [self.attrs["lat"],self.attrs["lon"]])
+					self.tags, [lat, lon])
 			self.attrs = {}
 			self.tags = {}
 			self.members = []
