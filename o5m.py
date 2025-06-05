@@ -1,4 +1,3 @@
-from __future__ import print_function
 import struct, datetime, calendar, datetime
 import pyo5mEncoding
 from io import BytesIO

@@ -8,6 +8,7 @@ To install in the python distribution:
 Example usage:
 
 ```python
+import hzip
 from pyo5m import OsmData
 
 if __name__=="__main__":
@@ -31,5 +32,54 @@ if __name__=="__main__":
 	print ("ways", len(osmData2.ways))
 	print ("relations", len(osmData2.relations))
 
-```
+	fi = gzip.open("city.osm.gz", "rt")
+	osmData = OsmData.OsmData()
+	osmData.LoadFromOsmXml(fi)
+	print ("nodes", len(osmData.nodes))
+	print ("ways", len(osmData.ways))
+	print ("relations", len(osmData.relations))
 
+```
+Streaming osm data during load is also supported.
+
+```python
+import OsmData, gzip, o5m, pyo5mEncoding
+
+class DataVisitor:
+
+	def StoreNode(self, objectId, metaData, tags, pos):
+		print ("node", objectId)
+
+	def StoreWay(self, objectId, metaData, tags, refs):
+		print ("way", objectId)
+
+	def StoreRelation(self, objectId, metaData, tags, refs):
+		print ("relation", objectId)
+
+	def StoreBounds(self, bbox):
+		print ("bbox", bbox)
+
+	def StoreIsDiff(self, isDiff):
+		print ("isDiff", isDiff)
+
+if __name__=="__main__":
+
+	fi = gzip.open("o5mtest.o5m.gz", "rb")
+
+	dec = o5m.O5mDecode(fi)
+
+	dataVisitor = DataVisitor()
+  
+	dec.funcStoreNode = dataVisitor.StoreNode
+	dec.funcStoreWay = dataVisitor.StoreWay
+	dec.funcStoreRelation = dataVisitor.StoreRelation
+	dec.funcStoreBounds = dataVisitor.StoreBounds
+	dec.funcStoreIsDiff = dataVisitor.StoreIsDiff
+
+	dec.DecodeHeader()
+
+	eof = False
+	while not eof:
+		eof = dec.DecodeNext()
+
+```
