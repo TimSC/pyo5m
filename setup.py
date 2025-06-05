@@ -1,7 +1,6 @@
-#python setup.py build_ext --inplace
 from distutils.core import setup, Extension
 
-module1 = Extension('Encoding',
+module1 = Extension('pyo5mEncoding',
                     sources = ['encoding.c'])
 
 setup (name = 'pyo5m',

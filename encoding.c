@@ -246,11 +246,11 @@ static PyMethodDef moduleFunctions[] = {
 };
 
 #if PY_MAJOR_VERSION >= 3
-PyMODINIT_FUNC PyInit_Encoding(void)
+PyMODINIT_FUNC PyInit_pyo5mEncoding(void)
 {
 	static struct PyModuleDef moduledef = {
 		PyModuleDef_HEAD_INIT,
-		"Encoding",	 /* m_name */
+		"pyo5mEncoding",	 /* m_name */
 		"Encoding o5m data types",  /* m_doc */
 		-1,				  /* m_size */
 		moduleFunctions,	/* m_methods */
@@ -262,7 +262,7 @@ PyMODINIT_FUNC PyInit_Encoding(void)
 	return PyModule_Create(&moduledef);
 }
 #else
-PyMODINIT_FUNC initEncoding(void)
+PyMODINIT_FUNC initpyo5mEncoding(void)
 {
 	(void) Py_InitModule("Encoding", moduleFunctions);
 }
