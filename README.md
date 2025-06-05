@@ -8,8 +8,8 @@ To install in the python distribution:
 Example usage:
 
 ```python
-import hzip
-from pyo5m import OsmData
+import gzip
+import OsmData
 
 if __name__=="__main__":
 
@@ -32,7 +32,7 @@ if __name__=="__main__":
 	print ("ways", len(osmData2.ways))
 	print ("relations", len(osmData2.relations))
 
-	fi = gzip.open("city.osm.gz", "rt")
+	fi = gzip.open("o5mtest.osm.gz", "rt")
 	osmData = OsmData.OsmData()
 	osmData.LoadFromOsmXml(fi)
 	print ("nodes", len(osmData.nodes))
@@ -43,7 +43,7 @@ if __name__=="__main__":
 Streaming osm data during load is also supported.
 
 ```python
-import OsmData, gzip, o5m, pyo5mEncoding
+import OsmData, gzip, o5m
 
 class DataVisitor:
 
