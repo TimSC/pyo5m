@@ -27,11 +27,8 @@ static PyObject *EncodeVarint(PyObject *self, PyObject *args)
 		}
 	}
 
-#if PY_MAJOR_VERSION >= 3
 	return PyBytes_FromStringAndSize(buff, cursor);
-#else
-	return PyString_FromStringAndSize(buff, cursor);
-#endif
+
 }
 
 static PyObject *EncodeZigzag(PyObject *self, PyObject *args)
@@ -60,11 +57,9 @@ static PyObject *EncodeZigzag(PyObject *self, PyObject *args)
 			return NULL;
 		}
 	}
-#if PY_MAJOR_VERSION >= 3
+
 	return PyBytes_FromStringAndSize(buff, cursor);
-#else
-	return PyString_FromStringAndSize(buff, cursor);
-#endif
+
 }
 
 // ************* Decode ***************
@@ -95,7 +90,6 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 	while (contin) {
 		PyObject *readResponse = PyObject_Call(readMethod, readLenArgListObj, NULL);
 
-#if PY_MAJOR_VERSION >= 3
 		if(!PyBytes_Check(readResponse)) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
@@ -114,26 +108,6 @@ static PyObject *DecodeVarint(PyObject *self, PyObject *args)
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
-#else
-		if(!PyString_Check(readResponse)) {
-			Py_DECREF(readResponse);
-			Py_DECREF(readLenArgListObj);
-			Py_DECREF(readMethod);
-			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
-			return NULL;
-		}
-
-		Py_ssize_t rawBuffSize = PyString_GET_SIZE(readResponse);
-		const char* rawBuff = PyString_AS_STRING(readResponse);
-
-		if(rawBuff == NULL || rawBuffSize < 1) {
-			Py_DECREF(readResponse);
-			Py_DECREF(readLenArgListObj);
-			Py_DECREF(readMethod);
-			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
-			return NULL;
-		}
-#endif
 
 		unsigned PY_LONG_LONG val = *(unsigned char *)(rawBuff);
 		contin = (val & 0x80) != 0;
@@ -177,7 +151,6 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 	while (contin) {
 		PyObject *readResponse = PyObject_Call(readMethod, readLenArgListObj, NULL);
 
-#if PY_MAJOR_VERSION >= 3
 		if(!PyBytes_Check(readResponse)) {
 			Py_DECREF(readResponse);
 			Py_DECREF(readLenArgListObj);
@@ -196,26 +169,6 @@ static PyObject *DecodeZigzag(PyObject *self, PyObject *args)
 			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
 			return NULL;
 		}
-#else
-		if(!PyString_Check(readResponse)) {
-			Py_DECREF(readResponse);
-			Py_DECREF(readLenArgListObj);
-			Py_DECREF(readMethod);
-			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected type");
-			return NULL;
-		}
-
-		Py_ssize_t rawBuffSize = PyString_GET_SIZE(readResponse);
-		const char* rawBuff = PyString_AS_STRING(readResponse);
-
-		if(rawBuff == NULL || rawBuffSize < 1) {
-			Py_DECREF(readResponse);
-			Py_DECREF(readLenArgListObj);
-			Py_DECREF(readMethod);
-			PyErr_SetString(PyExc_RuntimeError, "Read result has unexpected length");
-			return NULL;
-		}
-#endif
 
 		unsigned PY_LONG_LONG val = *(unsigned char *)(rawBuff);
 		contin = (val & 0x80) != 0;
@@ -245,7 +198,7 @@ static PyMethodDef moduleFunctions[] = {
 	{NULL, NULL, 0, NULL}
 };
 
-#if PY_MAJOR_VERSION >= 3
+
 PyMODINIT_FUNC PyInit_pyo5mEncoding(void)
 {
 	static struct PyModuleDef moduledef = {
@@ -261,10 +214,5 @@ PyMODINIT_FUNC PyInit_pyo5mEncoding(void)
 	};
 	return PyModule_Create(&moduledef);
 }
-#else
-PyMODINIT_FUNC initpyo5mEncoding(void)
-{
-	(void) Py_InitModule("Encoding", moduleFunctions);
-}
-#endif
+
 
