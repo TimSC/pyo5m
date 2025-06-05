@@ -3,13 +3,7 @@ o5m openstreetmap format encoder/decoder in python v2 and v3. Includes both stre
 
 To install in the python distribution:
 
- python setup.py build
-
- python setup.py install
-
-To install locally:
-
- python setup.py build_ext --inplace
+ python -m pip install .
 
 Example usage:
 
