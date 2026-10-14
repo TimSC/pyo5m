@@ -1,3 +1,14 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyo5m"
+version = "2.0.0"
+description = "Reading and writing OpenStreetMap data as o5m, o5c, OSM XML and osmChange XML, in pure Python"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
